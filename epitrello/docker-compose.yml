@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  db:
+    image: mariadb:latest
+    restart: unless-stopped
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: epitrello
+      MYSQL_USER: jeremy
+      MYSQL_PASSWORD: admin
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  web:
+    build: .
+    command: ["bash", "-c", "bundle exec rails server -b 0.0.0.0 -p 3000"]
+    container_name: epitrello-web
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+volumes:
+  db_data:

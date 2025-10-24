@@ -1,0 +1,81 @@
+# .gitignore - Gitignore classique pour un projet Ruby on Rails
+
+# Bundler
+/.bundle
+/vendor/bundle
+/vendor/cache
+/vendor/ruby
+
+# Rails logs and temp files
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/.keep
+
+# PID, socket, and other temp files (fallback)
+/tmp/pids/*
+/tmp/cache/*
+/tmp/sockets/*
+
+# Rails public/persistent files
+/public/assets
+/public/packs
+/public/packs-test
+/public/system
+
+# Active Storage
+/storage/*
+!/storage/.keep
+
+# Credentials and environment
+/config/credentials.yml.enc
+/config/master.key
+/master.key
+.env
+.env.*.local
+.env.*
+
+# Node / Yarn / npm
+/node_modules/
+/yarn-error.log
+.yarn-integrity
+npm-debug.log*
+package-lock.json
+yarn-debug.log*
+
+# Test / coverage
+/coverage/
+/spec/tmp
+/test/tmp
+/rspec.xml
+/coverage/
+
+# Editor/IDE files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ruby-specific
+.byebug_history
+*.rbc
+*.gem
+*.bundle
+.rb-versions
+.ruby-version?
+
+# Temporary editor swap files
+*~
+*.swp
+*.swo
+
+# Ignore logrotate or other rotated logs
+*.log.*
+
+# Misc
+public/packs-test/
