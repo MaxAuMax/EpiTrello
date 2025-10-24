@@ -4,11 +4,8 @@ services:
     image: mariadb:latest
     restart: unless-stopped
     container_name: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: epitrello
-      MYSQL_USER: jeremy
-      MYSQL_PASSWORD: admin
+    env_file:
+      - .env
     volumes:
       - db_data:/var/lib/mysql
     ports:
