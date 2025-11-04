@@ -3,7 +3,7 @@ services:
   db:
     image: mariadb:latest
     restart: unless-stopped
-    container_name: mariadb
+    container_name: mariadb-epitrello
     env_file:
       - .env
     volumes:
