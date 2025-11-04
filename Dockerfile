@@ -21,4 +21,6 @@ RUN bundle install
 # Copy the rest of the application code
 COPY . .
 
-CMD ["bash", "-c", "bin/rails db:create db:migrate && bin/rails server -b 0.0.0.0"]
+EXPOSE 3000
+
+CMD ["bash", "-c", "bin/rails db:create db:migrate && bin/rails server -b 0.0.0.0 -p 3000"]

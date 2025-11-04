@@ -1,9 +1,8 @@
-version: '3.9'
 services:
   db:
     image: mariadb:latest
     restart: unless-stopped
-    container_name: mariadb-epitrello
+    container_name: mariadb
     env_file:
       - .env
     volumes:
@@ -13,7 +12,7 @@ services:
 
   web:
     build: .
-    command: ["bash", "-c", "bundle exec rails server -b 0.0.0.0 -p 3000"]
+    command: ["bash", "-c", "bundle install && bundle exec rails server -b 0.0.0.0 -p 3000"]
     container_name: epitrello-web
     volumes:
       - .:/app
