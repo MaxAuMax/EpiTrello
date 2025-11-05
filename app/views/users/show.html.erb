@@ -1,0 +1,6 @@
+<h1>Bienvenue, <%= @user.username %> 👋</h1>
+
+<p>Email : <%= @user.email %></p>
+
+<%# <%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, data: { turbo: false } %>
+<%= button_to "Se déconnecter", destroy_user_session_path, method: :delete %>
