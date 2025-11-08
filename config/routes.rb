@@ -15,4 +15,6 @@ Rails.application.routes.draw do
   # root "posts#index"
   get 'users/:id', to: 'users#show', as: 'user'
   root to: 'users#show'
+
+  resources :projects
 end
