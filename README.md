@@ -60,3 +60,7 @@ docker compose exec epitrello-web bin/rails g migration <YourMigrationName>
 ```
 docker run epitrello-web bin/rails routes
 ```
+### Generate sample values
+```
+docker compose exec web bin/rails db:seed
+```

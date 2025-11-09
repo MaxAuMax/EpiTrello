@@ -11,6 +11,8 @@ services:
       - "3307:3306"
 
   web:
+    tty: true
+    stdin_open: true
     build: .
     command: ["bash", "-c", "bundle install && bundle exec rails server -b 0.0.0.0 -p 3000"]
     container_name: epitrello-web
