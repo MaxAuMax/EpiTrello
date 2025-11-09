@@ -16,5 +16,7 @@ Rails.application.routes.draw do
   get 'users/:id', to: 'users#show', as: 'user'
   root to: 'users#show'
 
-  resources :projects
+  resources :projects do
+    resources :tasks
+  end
 end

@@ -24,3 +24,20 @@ end
 ProjectStatus.find_or_create_by(name: 'On Hold') do |status|
   status.description = 'The project is currently on hold.'
 end
+
+# Créer les statuts de tâche par défaut
+TaskStatus.find_or_create_by(name: 'To Do') do |status|
+  status.description = 'The task is yet to be started.'
+end
+
+TaskStatus.find_or_create_by(name: 'In Progress') do |status|
+  status.description = 'The task is currently being worked on.'
+end
+
+TaskStatus.find_or_create_by(name: 'Completed') do |status|
+  status.description = 'The task has been completed.'
+end
+
+TaskStatus.find_or_create_by(name: 'On Hold') do |status|
+  status.description = 'The task is currently on hold.'
+end
