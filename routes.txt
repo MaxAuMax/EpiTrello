@@ -18,6 +18,14 @@
                       rails_health_check GET    /up(.:format)                                                                                     rails/health#show
                                     user GET    /users/:id(.:format)                                                                              users#show
                                     root GET    /                                                                                                 users#show
+                           project_tasks GET    /projects/:project_id/tasks(.:format)                                                             tasks#index
+                                         POST   /projects/:project_id/tasks(.:format)                                                             tasks#create
+                        new_project_task GET    /projects/:project_id/tasks/new(.:format)                                                         tasks#new
+                       edit_project_task GET    /projects/:project_id/tasks/:id/edit(.:format)                                                    tasks#edit
+                            project_task GET    /projects/:project_id/tasks/:id(.:format)                                                         tasks#show
+                                         PATCH  /projects/:project_id/tasks/:id(.:format)                                                         tasks#update
+                                         PUT    /projects/:project_id/tasks/:id(.:format)                                                         tasks#update
+                                         DELETE /projects/:project_id/tasks/:id(.:format)                                                         tasks#destroy
                                 projects GET    /projects(.:format)                                                                               projects#index
                                          POST   /projects(.:format)                                                                               projects#create
                              new_project GET    /projects/new(.:format)                                                                           projects#new

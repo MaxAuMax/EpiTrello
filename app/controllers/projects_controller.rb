@@ -1,4 +1,7 @@
 class ProjectsController < ApplicationController
+
+    include ProjectsHelper
+
     def index
 
         @projects = Project.all
@@ -7,15 +10,14 @@ class ProjectsController < ApplicationController
 
     def show
         @project = Project.find(params[:id])
+        @project_status = @project&.project_status&.name
         @project_users = @project.users
         @project_tasks = @project.tasks
     end
 
     def new
         @project = Project.new
-
-        statuses = ProjectStatus.all
-        @status_options = statuses.map { |status| [status.name, status.name] }
+        @status_options = status_options
     end
 
     def create
@@ -59,6 +61,6 @@ class ProjectsController < ApplicationController
     private
 
     def project_params
-        params.require(:project).permit(:name, :description, :start_date, :end_date, :status, :user_ids => [], :lead_dev_ids => [])
+        params.require(:project).permit(:name, :description, :start_date, :end_date, :project_status_id, :user_ids => [], :lead_dev_ids => [])
     end
 end

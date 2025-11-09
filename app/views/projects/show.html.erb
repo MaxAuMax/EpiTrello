@@ -1,11 +1,11 @@
 <%= link_to 'Add task', new_project_task_path(@project), class: 'btn-add' %>
-<%= link_to 'Back to projects', home_index_path, class: 'btn-back' %>
+<%= link_to 'Back to projects', root_path, class: 'btn-back' %>
 
 <h1><%= @project.name %></h1>
 
 <p><%= @project.description %></p>
 
-<p>State of project : <%= @project.status ? "Done" : "In progress" %></p>
+<p>State of project : <%= @project_status rescue "No status found" %></p>
 
 <p>Number of participants : <%= @project.users.count == 1 ? "Only you" : @project.users.count %></p>
 
@@ -13,17 +13,19 @@
 
 <% if @project_tasks.blank? %>
     <h2>Aucune tâche pour le moment</h2>
-<% else @project_tasks.blank? %>
+<% else %>
     <h2>Tâches</h2>
     <div class="task-carousel">
-        <% @project_tasks.each do |pj| %>
+        <% @project_tasks.each do |task| %>
             <div class="task-card">
-                <h2><%= pj.name %></h2>
-                <p>Description: <%= pj.description %></p>
-                <p>Done: <%= pj.done ? "yes" : "no" %></p>
-                <%= link_to "Show", project_task_path(pj.project, pj) %>
-                <%= link_to "Edit", edit_project_task_path(pj.project, pj) %>
-                <%= link_to "Destroy", project_task_path(pj.project, pj), data: { "turbo-method": :delete , turbo_confirm: 'Are you sure to delete task ?' } %>
+                <h2><%= task.title %></h2>
+                <p>Description: <%= task.description %></p>
+                <p>Status: <%= task.task_status&.name %></p>
+                <p>Due date: <%= task.due_date&.strftime("%d/%m/%Y") || "Not set" %></p>
+                <p>Assigned to: <%= task.assignee&.username || "Not assigned" %></p>
+                <%= link_to "Show", project_task_path(task.project, task) %>
+                <%= link_to "Edit", edit_project_task_path(task.project, task) %>
+                <%= link_to "Destroy", project_task_path(task.project, task), data: { "turbo-method": :delete , turbo_confirm: 'Are you sure to delete task ?' } %>
             </div>
         <% end %>
     </div>
@@ -54,26 +56,3 @@
     }
 
 </style>
-
-<script>
-  const ctx = document.getElementById('myChart');
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: [
-        'Done',
-        'In progress',
-      ],
-    datasets: [{
-      label: 'Tasks',
-      data: [<%= @project_tasks.where(done: true).count %>, <%= @project_tasks.where(done: false).count %>],
-      backgroundColor: [
-        'rgb(54, 162, 235)',
-        'rgb(255, 99, 132)',
-      ],
-      hoverOffset: 4
-    }]
-    },
-  });
-</script>

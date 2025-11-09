@@ -1,0 +1,44 @@
+<%= form_for([@project, @task]) do |f| %>
+    <% if @task.errors.any? %>
+        <div id="error_explanation">
+            <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+            <ul>
+                <% @task.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+        <%= f.label :title %>
+        <%= f.text_field :title, id: :task_title %>
+    </div>
+
+    <div class="field">
+        <%= f.label :description %>
+        <%= f.text_area :description, id: :task_description %>
+    </div>
+
+    <div class="field">
+        <%= f.label :due_date %>
+        <%= f.date_field :due_date, id: :task_due_date %>
+    </div>
+
+    <div class="field">
+        <%= f.label :task_status %>
+        <%= f.select :task_status_id, options_for_select(@status_options, @task.task_status_id), {}, { class: 'custom-select', id: 'task_status' } %>
+    </div>
+
+    <div class="field">
+        <%= f.label :assignee %>
+        <%= f.select :assignee_id, options_for_select(@project.users.map { |u| [u.username, u.id] }, @task.assignee_id), { include_blank: 'Not assigned' }, { class: 'custom-select', id: 'task_assignee' } %>
+    </div>
+
+    <div class="actions" style="margin-bottom: 2rem;">
+        <%= f.submit %>
+    </div>
+
+<% end %>
+
+<%= link_to "Back to project", project_path(@task.project), class: 'btn-back' %>
