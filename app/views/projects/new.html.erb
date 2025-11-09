@@ -1,0 +1,57 @@
+<%= form_for(@project) do |f| %>
+    <% if @project.errors.any? %>
+        <div id="error_explanation">
+        <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+        <ul>
+        <% @project.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+        <% end %>
+        </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name, id: :project_name %>
+    </div>
+
+    <div class="field">
+        <%= f.label :description %>
+        <%= f.text_area :description, id: :project_description %>
+    </div>
+
+    <div class="field">
+        <%= f.label :status %>
+        <%= f.select :status, options_for_select(@status_options), {}, { class: 'custom-select', id: 'project_status' } %>
+    </div>
+
+    <div class="field">
+        <%= f.label :users %>
+        <div class="users-chekbox">
+            <%= f.collection_check_boxes :user_ids, User.all.where.not(id: current_user.id), :id, :username %>
+        </div>
+    </div>
+
+    <div class="field">
+        <%= f.submit style: "margin-bottom: 1rem", class: 'btn-add' %>
+    </div>
+<% end %>
+
+<%= link_to 'Back', user_path(current_user), class: 'btn-back' %>
+
+<style>
+
+    .custom-select, #project_status {
+        width: 100%;
+        height: 80%;
+        padding: 1rem;
+        border: 2px solid #ffffff;
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+
+</style>
+
+<script>
+</script>
