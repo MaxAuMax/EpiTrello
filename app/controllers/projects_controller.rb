@@ -13,6 +13,9 @@ class ProjectsController < ApplicationController
 
     def new
         @project = Project.new
+
+        statuses = ProjectStatus.all
+        @status_options = statuses.map { |status| [status.name, status.name] }
     end
 
     def create

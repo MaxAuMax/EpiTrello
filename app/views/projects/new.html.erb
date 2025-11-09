@@ -23,7 +23,7 @@
 
     <div class="field">
         <%= f.label :status %>
-        <%= f.select :status, ['En cours', 'Terminé'], id: :project_status, class: 'custom-select' %>
+        <%= f.select :status, options_for_select(@status_options), {}, { class: 'custom-select', id: 'project_status' } %>
     </div>
 
     <div class="field">
