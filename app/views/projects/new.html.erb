@@ -22,8 +22,8 @@
     </div>
 
     <div class="field">
-        <%= f.label :status %>
-        <%= f.select :status, options_for_select(@status_options), {}, { class: 'custom-select', id: 'project_status' } %>
+        <%= f.label :project_status %>
+        <%= f.select :project_status_id, options_for_select(@status_options), {}, { class: 'custom-select', id: 'project_status' } %>
     </div>
 
     <div class="field">
