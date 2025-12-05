@@ -1,0 +1,19 @@
+<h1>Bienvenue, <%= @user.username %> 👋</h1>
+
+<p>Email : <%= @user.email %></p>
+
+<%# <%= link_to "Se déconnecter", destroy_user_session_path, method: :delete, data: { turbo: false } %>
+<%= button_to "Se déconnecter", destroy_user_session_path, method: :delete %>
+
+<%= link_to "Nouveau projets", new_project_path %>
+
+<ul>
+    <% @user.projects.each do |project| %>
+        <li>
+            <h2><%= project&.name %></h2>
+            <p><%= project&.description %></p>
+            <p>Statut : <%= project&.project_status&.name %></p>
+            <%= link_to "Voir le projet", project_path(project) %>
+        </li>
+    <% end %>
+</ul>
