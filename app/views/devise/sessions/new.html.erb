@@ -1,26 +1,166 @@
-<h2>Log in</h2>
+<div class="login-container">
+  <h1>Welcome Back</h1>
+  <p class="subtitle">Sign in to your account</p>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
-
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <div class="form-group">
+      <%= f.label :email, "Email address" %>
+      <%= f.email_field :email, placeholder: "email@example.com", autocomplete: "email", autofocus: true, required: true %>
     </div>
+
+    <div class="form-group">
+      <%= f.label :password %>
+      <%= f.password_field :password, placeholder: "••••••••", autocomplete: "current-password", required: true %>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+      <div class="remember-me">
+        <%= f.check_box :remember_me, class: "remember-checkbox" %>
+        <%= f.label :remember_me, "Remember me", class: "remember-label" %>
+      </div>
+    <% end %>
+
+    <div class="forgot-password">
+      <%= link_to "Forgot password?", new_password_path(resource_name) %>
+    </div>
+
+    <%= f.submit "Log in", class: "login-btn" %>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
+  <div class="signup-link">
+    Don't have an account? <%= link_to "Sign up", new_registration_path(resource_name) %>
   </div>
-<% end %>
+</div>
 
-<%= render "devise/shared/links" %>
+<style>
+.login-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.remember-checkbox {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.remember-label {
+  margin-left: 8px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  cursor: pointer;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 24px;
+}
+
+.forgot-password a {
+  font-size: 13px;
+  color: #0066cc;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.forgot-password a:hover {
+  color: #0052a3;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #0052a3;
+}
+
+.login-btn:active {
+  background-color: #003d7a;
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.signup-link a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.signup-link a:hover {
+  color: #0052a3;
+}
+</style>
