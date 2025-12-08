@@ -1,34 +1,221 @@
-<h2>Sign up</h2>
+<div class="login-container">
+  <h1>Create Account</h1>
+  <p class="subtitle">Sign up to get started</p>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <% if resource.errors.any? %>
+      <div class="error-messages">
+        <h2><%= pluralize(resource.errors.count, "error") %> prohibited signup:</h2>
+        <ul>
+          <% resource.errors.full_messages.each do |message| %>
+            <li>- <%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div class="field">
-    <%= f.label :username %><br />
-    <%= f.text_field :username, autofocus: true, autocomplete: "username" %>
+    <div class="form-group">
+      <%= f.label :username, "Username *" %>
+      <%=
+        f.text_field :username,
+        class: resource.errors.include?(:username) ? "input-error" : "",
+        autocomplete: "username",
+        placeholder: "Username",
+        autofocus: true
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email, "Email address *" %>
+      <%=
+        f.email_field :email,
+        class: resource.errors.include?(:email) ? "input-error" : "",
+        autocomplete: "email",
+        placeholder: "email@example.com"
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password, "Password *" %>
+      <% if @minimum_password_length %>
+        <em class="subtitle">(<%= @minimum_password_length %> characters minimum)</em>
+      <% end %>
+      <%=
+        f.password_field :password,
+        class: resource.errors.include?(:password) ? "input-error" : "",
+        autocomplete: "new-password",
+        placeholder: "••••••••",
+        minlength: @minimum_password_length
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password_confirmation, "Confirm password *" %>
+      <%=
+        f.password_field :password_confirmation,
+        class: (resource.errors.include?(:password_confirmation) || resource.errors.include?(:password)) ? "input-error" : "",
+        autocomplete: "new-password",
+        placeholder: "••••••••"
+      %>
+    </div>
+
+    <p class="required-notice">* Required fields</p>
+
+    <div class="actions">
+      <%= f.submit "Sign up", class: "login-btn" %>
+    </div>
+  <% end %>
+
+  <div class="signup-link">
+    Already have an account? <%= link_to "Log in", new_session_path(resource_name) %>
   </div>
+</div>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+<style>
+.login-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+}
 
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  text-align: center;
+}
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 32px;
+}
 
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+.required-notice {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 20px;
+  font-style: italic;
+}
 
-<%= render "devise/shared/links" %>
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.actions {
+  margin-top: 24px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #0052a3;
+}
+
+.login-btn:active {
+  background-color: #003d7a;
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.signup-link a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.signup-link a:hover {
+  color: #0052a3;
+}
+
+/* Added error message styles */
+.error-messages {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 24px;
+}
+
+.error-messages h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #dc2626;
+  margin: 0 0 8px 0;
+}
+
+.error-messages ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.error-messages li {
+  font-size: 13px;
+  color: #991b1b;
+  margin: 4px 0;
+}
+
+/* Added error state for input fields */
+.input-error {
+  border-color: #fca5a5 !important;
+  background-color: #fef2f2;
+}
+
+.input-error:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+</style>
