@@ -5,25 +5,12 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: linear-gradient(-45deg, #0066cc, #3399ff, #9dc4ff, #d1e7ff);
-  background-size: 200% 200%;
-  animation: gradient 7s ease infinite;
-  min-height: 100vh;
   display: flex;
   align-items: center;  
   justify-content: center;
   padding: 20px;
-}
-
-@keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+  min-height: 100vh;
+  background: #EEAECA; /* fallback for old browsers */
+  background: radial-gradient(circle,rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
