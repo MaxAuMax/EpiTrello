@@ -1,4 +1,4 @@
-<div class="container">
+<div class="auth-container">
   <h1>Create Account</h1>
   <p class="subtitle">Sign up to get started</p>
 
@@ -50,16 +50,17 @@
     </div>
 
     <div class="form-group">
-      <%= f.label :password_confirmation, "Confirm password *" %>
+      <%= f.label :password_confirmation, "Confirm Password *" %>
       <%=
         f.password_field :password_confirmation,
-        class: (resource.errors.include?(:password_confirmation) || resource.errors.include?(:password)) ? "input-error" : "",
+        class: resource.errors.include?(:password_confirmation) ? "input-error" : "",
         autocomplete: "new-password",
-        placeholder: "••••••••"
+        placeholder: "••••••••",
+        minlength: @minimum_password_length
       %>
     </div>
 
-    <p class="required-notice">* Required fields</p>
+    <p class="required-notice">* All fields are required</p>
 
     <%= f.submit "Sign up", class: "button" %>
   <% end %>
@@ -70,144 +71,10 @@
 </div>
 
 <style>
-.container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 400px;
-  padding: 40px;
-}
-
-h1 {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: #666;
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.required-notice {
+.auth-container .required-notice {
   font-size: 12px;
   color: #666;
   margin-bottom: 20px;
   font-style: italic;
 }
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-input[type="email"],
-input[type="password"],
-input[type="text"] {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="text"]:focus {
-  outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-}
-
-.button {
-  width: 100%;
-  padding: 12px;
-  background-color: #0066cc;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.button:hover {
-  background-color: #0052a3;
-}
-
-.button:active {
-  background-color: #003d7a;
-}
-
-.link {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #666;
-}
-
-.link a {
-  color: #0066cc;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.link a:hover {
-  color: #0052a3;
-}
-
-.error-messages {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 6px;
-  padding: 12px 14px;
-  margin-bottom: 24px;
-}
-
-.error-messages h2 {
-  font-size: 13px;
-  font-weight: 600;
-  color: #dc2626;
-  margin: 0 0 8px 0;
-}
-
-.error-messages ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.error-messages li {
-  font-size: 13px;
-  color: #991b1b;
-  margin: 4px 0;
-}
-
-.input-error {
-  border-color: #fca5a5 !important;
-  background-color: #fef2f2;
-}
-
-.input-error:focus {
-  border-color: #dc2626 !important;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
-}
-
 </style>

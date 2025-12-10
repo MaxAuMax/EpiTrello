@@ -1,4 +1,4 @@
-<div class="container">
+<div class="auth-container">
   <h1>Welcome Back</h1>
   <p class="subtitle">Sign in to your account</p>
 
@@ -40,74 +40,20 @@
 </div>
 
 <style>
-.container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 400px;
-  padding: 40px;
-}
-
-h1 {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.subtitle {
-  font-size: 14px;
-  color: #666;
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-input[type="email"]:focus,
-input[type="password"]:focus {
-  outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-}
-
-.remember-me {
+.auth-container .remember-me {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
 }
 
-.remember-checkbox {
+.auth-container .remember-checkbox {
   width: 16px;
   height: 16px;
   margin: 0;
   cursor: pointer;
 }
 
-.remember-label {
+.auth-container .remember-label {
   margin-left: 8px;
   margin-bottom: 0;
   font-size: 14px;
@@ -116,79 +62,19 @@ input[type="password"]:focus {
   cursor: pointer;
 }
 
-.forgot-password {
+.auth-container .forgot-password {
   text-align: right;
   margin-bottom: 24px;
 }
 
-.forgot-password a {
+.auth-container .forgot-password a {
   font-size: 13px;
   color: #0066cc;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-.forgot-password a:hover {
+.auth-container .forgot-password a:hover {
   color: #0052a3;
-}
-
-.button {
-  width: 100%;
-  padding: 12px;
-  background-color: #0066cc;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.button:hover {
-  background-color: #0052a3;
-}
-
-.button:active {
-  background-color: #003d7a;
-}
-
-.link {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #666;
-}
-
-.link a {
-  color: #0066cc;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.link a:hover {
-  color: #0052a3;
-}
-
-.error-messages {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 6px;
-  padding: 12px 14px;
-  margin-bottom: 24px;
-}
-
-.error-messages h2 {
-  font-size: 13px;
-  font-weight: 600;
-  color: #dc2626;
-  margin: 0 0 8px 0;
-}
-
-.error-messages p {
-  font-size: 13px;
-  color: #991b1b;
-  margin: 0;
 }
 </style>
