@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="container">
   <h1>Forgot Password?</h1>
   <p class="subtitle">Enter your email to reset your password</p>
 
@@ -19,18 +19,16 @@
       <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "email@example.com" %>
     </div>
 
-    <div class="actions">
-      <%= f.submit "Send reset instructions", class: "login-btn" %>
-    </div>
+    <%= f.submit "Send reset instructions", class: "button" %>
   <% end %>
 
-  <div class="signup-link">
+  <div class="link">
     <%= link_to "Back to login", new_session_path(resource_name) %>
   </div>
 </div>
 
 <style>
-.login-container {
+.container {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -87,7 +85,7 @@ input[type="email"]:focus {
   margin-top: 24px;
 }
 
-.login-btn {
+.button {
   width: 100%;
   padding: 12px;
   background-color: #0066cc;
@@ -100,29 +98,29 @@ input[type="email"]:focus {
   transition: background-color 0.2s ease;
 }
 
-.login-btn:hover {
+.button:hover {
   background-color: #0052a3;
 }
 
-.login-btn:active {
+.button:active {
   background-color: #003d7a;
 }
 
-.signup-link {
+.link {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
   color: #666;
 }
 
-.signup-link a {
+.link a {
   color: #0066cc;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
-.signup-link a:hover {
+.link a:hover {
   color: #0052a3;
 }
 

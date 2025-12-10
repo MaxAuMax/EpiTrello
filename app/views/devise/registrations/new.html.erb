@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="container">
   <h1>Create Account</h1>
   <p class="subtitle">Sign up to get started</p>
 
@@ -61,18 +61,16 @@
 
     <p class="required-notice">* Required fields</p>
 
-    <div class="actions">
-      <%= f.submit "Sign up", class: "login-btn" %>
-    </div>
+    <%= f.submit "Sign up", class: "button" %>
   <% end %>
 
-  <div class="signup-link">
+  <div class="link">
     Already have an account? <%= link_to "Log in", new_session_path(resource_name) %>
   </div>
 </div>
 
 <style>
-.login-container {
+.container {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -136,11 +134,7 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
-.actions {
-  margin-top: 24px;
-}
-
-.login-btn {
+.button {
   width: 100%;
   padding: 12px;
   background-color: #0066cc;
@@ -153,33 +147,32 @@ input[type="text"]:focus {
   transition: background-color 0.2s ease;
 }
 
-.login-btn:hover {
+.button:hover {
   background-color: #0052a3;
 }
 
-.login-btn:active {
+.button:active {
   background-color: #003d7a;
 }
 
-.signup-link {
+.link {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
   color: #666;
 }
 
-.signup-link a {
+.link a {
   color: #0066cc;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
-.signup-link a:hover {
+.link a:hover {
   color: #0052a3;
 }
 
-/* Added error message styles */
 .error-messages {
   background-color: #fef2f2;
   border: 1px solid #fecaca;
@@ -207,7 +200,6 @@ input[type="text"]:focus {
   margin: 4px 0;
 }
 
-/* Added error state for input fields */
 .input-error {
   border-color: #fca5a5 !important;
   background-color: #fef2f2;
