@@ -1,34 +1,80 @@
-<h2>Sign up</h2>
+<div class="auth-container">
+  <h1>Create Account</h1>
+  <p class="subtitle">Sign up to get started</p>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <% if resource.errors.any? %>
+      <div class="error-messages">
+        <h2><%= pluralize(resource.errors.count, "error") %> prohibited signup:</h2>
+        <ul>
+          <% resource.errors.full_messages.each do |message| %>
+            <li>- <%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div class="field">
-    <%= f.label :username %><br />
-    <%= f.text_field :username, autofocus: true, autocomplete: "username" %>
+    <div class="form-group">
+      <%= f.label :username, "Username *" %>
+      <%=
+        f.text_field :username,
+        class: resource.errors.include?(:username) ? "input-error" : "",
+        autocomplete: "username",
+        placeholder: "Username",
+        autofocus: true
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email, "Email address *" %>
+      <%=
+        f.email_field :email,
+        class: resource.errors.include?(:email) ? "input-error" : "",
+        autocomplete: "email",
+        placeholder: "email@example.com"
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password, "Password *" %>
+      <% if @minimum_password_length %>
+        <em class="subtitle">(<%= @minimum_password_length %> characters minimum)</em>
+      <% end %>
+      <%=
+        f.password_field :password,
+        class: resource.errors.include?(:password) ? "input-error" : "",
+        autocomplete: "new-password",
+        placeholder: "••••••••",
+        minlength: @minimum_password_length
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password_confirmation, "Confirm Password *" %>
+      <%=
+        f.password_field :password_confirmation,
+        class: (resource.errors.include?(:password_confirmation) || resource.errors.include?(:password)) ? "input-error" : "",
+        autocomplete: "new-password",
+        placeholder: "••••••••",
+        minlength: @minimum_password_length
+      %>
+    </div>
+
+    <p class="required-notice">* All fields are required</p>
+
+    <%= f.submit "Sign up", class: "button" %>
+  <% end %>
+
+  <div class="link">
+    Already have an account? <%= link_to "Log in", new_session_path(resource_name) %>
   </div>
+</div>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+<style>
+.auth-container .required-notice {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+</style>

@@ -3,4 +3,6 @@ class User < ApplicationRecord
 
   has_many :projects_users, dependent: :destroy
   has_many :projects, through: :projects_users
+
+  validates :username, presence: true, uniqueness: true
 end
