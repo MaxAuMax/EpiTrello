@@ -44,6 +44,10 @@ jobs:
     - name: Start containers
       run: docker compose up -d
 
+    - name: Install gems
+      run: |
+        docker compose exec -T web bundle install
+
     - name: Wait for database to be ready
       run: |
         timeout 60 bash -c 'until docker compose exec -T db mariadb -u root -prootpassword -e "SELECT 1" >/dev/null 2>&1; do sleep 2; done'
