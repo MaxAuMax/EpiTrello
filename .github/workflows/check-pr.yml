@@ -1,0 +1,52 @@
+name: check pull request
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  test_and_check:
+    name: check pr
+    runs-on: ubuntu-latest
+
+    env:
+      # App env - hardcoded for test environment
+      RAILS_ENV: test
+      DATABASE_HOST: mariadb
+      DATABASE_USER: testuser
+      DATABASE_PASSWORD: testpassword
+
+      # DB env - MariaDB container initialization
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: epitrello
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: docker compose build
+
+    - name: Start containers
+      run: docker compose up -d
+
+    - name: Wait for database to be ready
+      run: |
+        timeout 60 bash -c 'until docker compose exec -T db mariadb -u root -prootpassword -e "SELECT 1" >/dev/null 2>&1; do sleep 2; done'
+
+    - name: Create test database and grant permissions
+      run: |
+        docker compose exec -T db mariadb -u root -prootpassword -e "CREATE DATABASE IF NOT EXISTS epitrello_test; GRANT ALL PRIVILEGES ON epitrello_test.* TO 'testuser'@'%'; FLUSH PRIVILEGES;"
+
+    - name: Setup test database schema
+      run: |
+        docker compose exec -T web bin/rails db:test:prepare
+
+    - name: Run tests
+      run: |
+        docker compose exec -T web bin/rails test
+
+    - name: Cleanup
+      if: always()
+      run: docker compose down -v
