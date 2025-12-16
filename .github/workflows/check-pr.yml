@@ -25,6 +25,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Create .env file for CI
+      run: |
+        cat > .env << EOF
+        DATABASE_HOST=mariadb
+        DATABASE_USER=testuser
+        DATABASE_PASSWORD=testpassword
+        RAILS_ENV=test
+        MYSQL_ROOT_PASSWORD=rootpassword
+        MYSQL_DATABASE=epitrello
+        MYSQL_USER=testuser
+        MYSQL_PASSWORD=testpassword
+        EOF
+
     - name: Build
       run: docker compose build
 
