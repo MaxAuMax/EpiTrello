@@ -197,7 +197,6 @@
 }
 
 .landing-btn-login {
-  display: none;
   font-size: 0.875rem;
   font-weight: 500;
   color: #64748b;
@@ -296,7 +295,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: float 4s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .social-proof-logo {
+    animation: float 4s ease-in-out infinite;
+  }
 }
 
 .social-proof-logo img {
@@ -364,7 +368,13 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 0 2rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .footer-bottom {
+    padding: 0 2rem;
+  }
 }
 
 .footer-logo {
