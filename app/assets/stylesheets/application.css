@@ -67,6 +67,11 @@
   box-sizing: border-box;
 }
 
+* ::selection {
+  background: #ffedd4;
+  color: #7e2a0c;
+}
+
 body {
   display: flex;
   align-items: center;  
