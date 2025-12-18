@@ -83,7 +83,7 @@
             <span class="logo-text">Flow</span>
           </div>
           <p class="footer-copyright">
-            © 2025 Flow Inc. All rights reserved.
+            © <%= Time.current.year %> Flow Inc. All rights reserved.
           </p>
         </div>
       </div>
@@ -113,11 +113,24 @@
 .nav .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0 var(--spacing-xl);
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+  .nav .container {
+    padding: 0 var(--spacing-2xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .nav .container {
+    max-width: 100%;
+    padding: 0 var(--spacing-4xl);
+  }
 }
 
 .logo {
