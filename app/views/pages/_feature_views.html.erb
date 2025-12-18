@@ -13,12 +13,14 @@
         <div class="feature-card feature-card-1">
             <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <%# Dots %>
+                <circle cx="4" cy="6" r="0.2"></circle>
+                <circle cx="4" cy="12" r="0.2"></circle>
+                <circle cx="4" cy="18" r="0.2"></circle>
+                <%# Lines %>
                 <line x1="8" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
                 <line x1="8" y1="18" x2="21" y2="18"></line>
-                <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                <line x1="3" y1="18" x2="3.01" y2="18"></line>
             </svg>
             </div>
             <h3 class="feature-name">List View</h3>
@@ -231,6 +233,7 @@
     width: 32px;
     height: 32px;
     color: white;
+    display: block;
 }
 
 .feature-name {
@@ -415,7 +418,7 @@
 .cta-section {
     position: relative;
     margin-top: 8rem;
-    padding: 6rem 0;
+    padding: 4rem 0;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     border-radius: 32px;
     overflow: hidden;
