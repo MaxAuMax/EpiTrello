@@ -407,6 +407,68 @@ body {
   text-decoration: underline;
 }
 
+/* Remember Me Checkbox */
+.auth-container .remember-me {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.auth-container .remember-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: white;
+  border: 2px solid var(--color-slate-900);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.auth-container .remember-checkbox:checked::before {
+  content: '';
+  position: absolute;
+  top: 1.5px;
+  left: 1.5px;
+  right: 1.5px;
+  bottom: 1.5px;
+  background: var(--gradient-brand);
+  border-radius: 2px;
+}
+
+.auth-container .remember-label {
+  margin-left: var(--spacing-xs);
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-slate-700);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Forgot Password Link */
+.auth-container .forgot-password {
+  text-align: right;
+  margin-bottom: var(--spacing-xl);
+}
+
+.auth-container .forgot-password a {
+  font-size: 0.8125rem;
+  color: var(--color-slate-900);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  display: inline-block;
+}
+
+.auth-container .forgot-password a:hover {
+  color: var(--color-slate-700);
+  text-decoration: underline;
+}
+
 /* Error Messages */
 .auth-container .error-messages {
   background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
