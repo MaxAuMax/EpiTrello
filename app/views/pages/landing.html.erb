@@ -10,15 +10,13 @@
           </svg>
         </div>
         <span class="landing-logo-text">
-          FlowBoard
+          Flow
         </span>
       </div>
 
       <div class="landing-nav-links">
-        <a href="#">Features</a>
-        <a href="#">Solutions</a>
-        <a href="#">Pricing</a>
-        <a href="#">Enterprise</a>
+        <a href="#features">Features</a>
+        <a href="#cta">Get Started</a>
       </div>
 
       <div class="landing-nav-actions">
@@ -52,43 +50,6 @@
     <!-- Footer -->
     <footer class="landing-footer">
       <div class="container">
-        <div class="footer-grid">
-          <div class="footer-column">
-            <h4>Product</h4>
-            <ul>
-              <li><a href="#">Features</a></li>
-              <li><a href="#">Integrations</a></li>
-              <li><a href="#">Pricing</a></li>
-              <li><a href="#">Changelog</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>Company</h4>
-            <ul>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">Contact</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>Resources</h4>
-            <ul>
-              <li><a href="#">Community</a></li>
-              <li><a href="#">Help Center</a></li>
-              <li><a href="#">API Docs</a></li>
-              <li><a href="#">Status</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4>Legal</h4>
-            <ul>
-              <li><a href="#">Privacy</a></li>
-              <li><a href="#">Terms</a></li>
-              <li><a href="#">Security</a></li>
-            </ul>
-          </div>
-        </div>
         <div class="footer-bottom">
           <div class="footer-logo">
             <div class="footer-logo-icon">
@@ -97,10 +58,10 @@
                 <line x1="9" y1="3" x2="9" y2="21"></line>
               </svg>
             </div>
-            <span class="footer-logo-text">FlowBoard</span>
+            <span class="footer-logo-text">Flow</span>
           </div>
           <p class="footer-copyright">
-            © 2024 FlowBoard Inc. All rights reserved.
+            © 2025 Flow Inc. All rights reserved.
           </p>
         </div>
       </div>
@@ -110,6 +71,10 @@
 
 <style>
   /* Landing Page Styles */
+  html {
+    scroll-behavior: smooth;
+  }
+
   .landing-page {
     min-height: 100vh;
     background: white;
@@ -238,9 +203,10 @@
 
   /* Container */
   .container {
-    max-width: 1200px;
+    max-width: 100%;
+    width: 100%;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
   }
 
   /* Social Proof */
@@ -287,70 +253,22 @@
   .landing-footer {
     background: #f8fafc;
     border-top: 1px solid #e2e8f0;
-    padding-top: 4rem;
-    padding-bottom: 2rem;
-  }
-
-  .footer-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  @media (min-width: 768px) {
-    .footer-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .footer-column h4 {
-    font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 1rem;
-  }
-
-  .footer-column ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .footer-column li {
-    margin-bottom: 0.5rem;
-  }
-
-  .footer-column a {
-    font-size: 0.875rem;
-    color: #64748b;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer-column a:hover {
-    color: #f97316;
+    padding: 2rem 0;
   }
 
   .footer-bottom {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding-top: 2rem;
-    border-top: 1px solid #e2e8f0;
-  }
-
-  @media (min-width: 768px) {
-    .footer-bottom {
-      flex-direction: row;
-    }
+    gap: 1rem;
+    padding: 0 2rem;
   }
 
   .footer-logo {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1rem;
   }
 
   @media (min-width: 768px) {
