@@ -1,10 +1,10 @@
 <section id="features" class="features-section">
   <div class="container">
-    <div class="features-header">
-      <h2 class="features-title">
-        See your work, <span class="features-title-gradient">your way</span>
+    <div class="section-header">
+      <h2 class="section-title">
+        See your work, <span class="text-gradient-blue">your way</span>
       </h2>
-      <p class="features-description">
+      <p class="section-description">
         Choose the view that best fits your workflow. Switch between List, Timeline, and Calendar views with a single click.
       </p>
     </div>
@@ -121,7 +121,7 @@
       Join thousands of teams already using Flow to streamline their workflow and achieve their goals faster.
     </p>
     <div class="cta-buttons">
-      <%= link_to new_user_registration_path, class: "cta-btn-primary" do %>
+      <%= link_to new_user_registration_path, class: "btn btn-secondary" do %>
         Start for free
         <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -134,66 +134,31 @@
 
 <style>
 .features-section {
-  padding: 8rem 0 4rem 0;
-  background: #ffffff;
-}
-
-.features-header {
-  text-align: center;
-  margin-bottom: 5rem;
-  max-width: 48rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.features-title {
-  font-size: 2.25rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: #0f172a;
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-  .features-title {
-  font-size: 3rem;
-  }
-}
-
-.features-title-gradient {
-  background: linear-gradient(to right, #155dfc, #7f22fe);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.features-description {
-  font-size: 1.125rem;
-  color: #64748b;
-  line-height: 1.75;
+  padding: var(--spacing-6xl) 0 var(--spacing-3xl) 0;
+  background: white;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: var(--spacing-xl);
 }
 
 @media (min-width: 1024px) {
   .features-grid {
-  grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .feature-card {
   position: relative;
-  background: #ffffff;
-  border-radius: 24px;
-  padding: 2.5rem;
+  background: white;
+  border-radius: var(--radius-2xl);
+  padding: var(--spacing-2xl);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--color-slate-100);
   overflow: hidden;
-  transition: all 0.3s;
+  transition: all var(--transition-base);
 }
 
 .feature-card:hover {
@@ -204,12 +169,12 @@
 .feature-icon {
   width: 64px;
   height: 64px;
-  border-radius: 16px;
-  margin-bottom: 1.5rem;
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--spacing-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
+  transition: all var(--transition-base);
 }
 
 .feature-card:hover .feature-icon {
@@ -217,15 +182,15 @@
 }
 
 .feature-card-1 .feature-icon {
-  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  background: linear-gradient(135deg, var(--color-orange-600) 0%, var(--color-orange-500) 100%);
 }
 
 .feature-card-2 .feature-icon {
-  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  background: linear-gradient(135deg, var(--color-pink-500) 0%, #db2777 100%);
 }
 
 .feature-card-3 .feature-icon {
-  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+  background: linear-gradient(135deg, var(--color-purple-500) 0%, #9333ea 100%);
 }
 
 .feature-icon svg {
@@ -238,14 +203,14 @@
 .feature-name {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-slate-900);
   margin-bottom: 0.75rem;
 }
 
 .feature-description {
   font-size: 0.875rem;
-  color: #64748b;
-  margin-bottom: 2rem;
+  color: var(--color-slate-500);
+  margin-bottom: var(--spacing-xl);
   line-height: 1.6;
 }
 
@@ -260,14 +225,14 @@
 /* List View Visualization */
 .list-visual {
   background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-  padding: 1rem;
+  padding: var(--spacing-md);
 }
 
 .list-item {
   background: white;
   padding: 0.75rem;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
@@ -277,13 +242,13 @@
 .list-checkbox {
   width: 16px;
   height: 16px;
-  border: 2px solid #fb923c;
-  border-radius: 4px;
+  border: 2px solid var(--color-orange-600);
+  border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 
 .list-checkbox.checked {
-  background: #fb923c;
+  background: var(--color-orange-600);
   position: relative;
 }
 
@@ -301,8 +266,8 @@
 .list-text {
   flex: 1;
   height: 8px;
-  background: #e2e8f0;
-  border-radius: 4px;
+  background: var(--color-slate-200);
+  border-radius: var(--radius-sm);
 }
 
 .list-text.short {
@@ -312,7 +277,7 @@
 /* Timeline View Visualization */
 .timeline-visual {
   background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
-  padding: 1.5rem 1rem;
+  padding: var(--spacing-lg) var(--spacing-md);
   position: relative;
 }
 
@@ -322,7 +287,7 @@
   border-radius: 6px;
   display: flex;
   align-items: center;
-  padding: 0 0.5rem;
+  padding: 0 var(--spacing-sm);
   font-size: 10px;
   color: white;
   font-weight: 600;
@@ -330,22 +295,22 @@
 }
 
 .timeline-bar-1 {
-  background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
-  left: 1rem;
-  top: 1.5rem;
+  background: linear-gradient(90deg, var(--color-pink-500) 0%, var(--color-pink-600) 100%);
+  left: var(--spacing-md);
+  top: var(--spacing-lg);
   width: 40%;
 }
 
 .timeline-bar-2 {
-  background: linear-gradient(90deg, #db2777 0%, #ec4899 100%);
+  background: linear-gradient(90deg, #db2777 0%, var(--color-pink-500) 100%);
   left: 2.5rem;
   top: 3.5rem;
   width: 50%;
 }
 
 .timeline-bar-3 {
-  background: linear-gradient(90deg, #f472b6 0%, #fbcfe8 100%);
-  left: 1.5rem;
+  background: linear-gradient(90deg, var(--color-pink-600) 0%, #fbcfe8 100%);
+  left: var(--spacing-lg);
   top: 5.5rem;
   width: 35%;
 }
@@ -360,28 +325,28 @@
 /* Calendar View Visualization */
 .calendar-visual {
   background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-  padding: 1rem;
+  padding: var(--spacing-md);
 }
 
 .calendar-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
 }
 
 .calendar-day-label {
   text-align: center;
   font-size: 10px;
   font-weight: 600;
-  color: #a855f7;
-  padding: 0.25rem;
+  color: var(--color-purple-500);
+  padding: var(--spacing-xs);
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.25rem;
+  gap: var(--spacing-xs);
 }
 
 .calendar-day {
@@ -392,13 +357,13 @@
   align-items: center;
   justify-content: center;
   font-size: 10px;
-  color: #64748b;
+  color: var(--color-slate-500);
   position: relative;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .calendar-day.has-event {
-  background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
+  background: linear-gradient(135deg, var(--color-purple-500) 0%, var(--color-purple-600) 100%);
   color: white;
   font-weight: 700;
 }
@@ -416,10 +381,10 @@
 /* CTA Section */
 .cta-section {
   position: relative;
-  margin: 4rem 0;
-  padding: 4rem 0 4rem 0;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border-radius: 32px;
+  margin: var(--spacing-3xl) 0;
+  padding: var(--spacing-3xl) 0;
+  background: linear-gradient(135deg, var(--color-slate-900) 0%, var(--color-slate-800) 100%);
+  border-radius: var(--radius-2xl);
   overflow: hidden;
 }
 
@@ -433,13 +398,13 @@
 }
 
 .cta-gradient-1 {
-  background: #f97316;
+  background: var(--color-orange-500);
   top: -300px;
   right: -200px;
 }
 
 .cta-gradient-2 {
-  background: #ec4899;
+  background: var(--color-pink-500);
   bottom: -300px;
   left: -200px;
 }
@@ -450,7 +415,7 @@
   text-align: center;
   max-width: 48rem;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--spacing-lg);
 }
 
 .cta-title {
@@ -458,62 +423,26 @@
   font-weight: 700;
   letter-spacing: -0.025em;
   color: white;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 @media (min-width: 768px) {
   .cta-title {
-  font-size: 3rem;
+    font-size: 3rem;
   }
 }
 
 .cta-description {
   font-size: 1.125rem;
-  color: #cbd5e1;
-  margin-bottom: 2.5rem;
+  color: var(--color-slate-300);
+  margin-bottom: var(--spacing-2xl);
   line-height: 1.75;
 }
 
 .cta-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--spacing-md);
   justify-content: center;
-}
-
-.cta-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  background: white;
-  color: #0f172a;
-  border-radius: 9999px;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.2);
-  transition: all 0.2s;
-}
-
-.cta-btn-primary:hover {
-  background: #f8fafc;
-  transform: scale(1.05);
-}
-
-.cta-btn-secondary {
-  padding: 1rem 2rem;
-  background: transparent;
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 9999px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.cta-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: scale(1.05);
 }
 </style>

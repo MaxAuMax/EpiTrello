@@ -15,7 +15,7 @@
 
         <h1 class="hero-title">
           Move work <br>
-          <span class="hero-title-gradient">forward.</span>
+          <span class="text-gradient">forward.</span>
         </h1>
 
         <p class="hero-description">
@@ -24,7 +24,7 @@
         </p>
 
         <div class="hero-buttons">
-          <%= link_to new_user_registration_path, class: "hero-btn-primary" do %>
+          <%= link_to new_user_registration_path, class: "btn btn-primary" do %>
             Start for free
             <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
@@ -215,12 +215,12 @@
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
-  background: #f8fafc;
+  background: var(--color-slate-50);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: var(--spacing-4xl);
+  padding-bottom: var(--spacing-4xl);
 }
 
 .hero-bg {
@@ -271,13 +271,13 @@
   z-index: 10;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem;
+  gap: var(--spacing-2xl);
   align-items: center;
 }
 
 @media (min-width: 1024px) {
   .hero-content {
-  grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -288,13 +288,13 @@
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0.75rem;
+  border-radius: var(--radius-full);
   background: white;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-slate-200);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .hero-badge-dot {
@@ -302,41 +302,34 @@
   height: 8px;
   width: 8px;
   border-radius: 50%;
-  background: #f97316;
+  background: var(--color-orange-500);
 }
 
 .hero-badge-text {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #64748b;
+  color: var(--color-slate-500);
 }
 
 .hero-title {
   font-size: 3rem;
   font-weight: 700;
   letter-spacing: -0.025em;
-  color: #0f172a;
-  margin-bottom: 1.5rem;
+  color: var(--color-slate-900);
+  margin-bottom: var(--spacing-lg);
   line-height: 1.1;
 }
 
 @media (min-width: 768px) {
   .hero-title {
-  font-size: 4.5rem;
+    font-size: 4.5rem;
   }
-}
-
-.hero-title-gradient {
-  background: linear-gradient(to right, #f97316, #ec4899, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .hero-description {
   font-size: 1.25rem;
-  color: #64748b;
-  margin-bottom: 2rem;
+  color: var(--color-slate-500);
+  margin-bottom: var(--spacing-xl);
   line-height: 1.75;
   max-width: 32rem;
 }
@@ -344,51 +337,16 @@
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
-}
-
-.hero-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  background: #0f172a;
-  color: white;
-  border-radius: 9999px;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2);
-  transition: all 0.2s;
-}
-
-.hero-btn-primary:hover {
-  background: #1e293b;
-  transform: scale(1.05);
-}
-
-.hero-btn-secondary {
-  padding: 1rem 2rem;
-  background: white;
-  color: #334155;
-  border: 1px solid #e2e8f0;
-  border-radius: 9999px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-
-.hero-btn-secondary:hover {
-  background: #f8fafc;
-  transform: scale(1.05);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-2xl);
 }
 
 .hero-social-proof {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-md);
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--color-slate-400);
 }
 
 .hero-avatars {
@@ -401,7 +359,7 @@
   height: 32px;
   border-radius: 50%;
   border: 2px solid white;
-  background: #e2e8f0;
+  background: var(--color-slate-200);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -418,7 +376,7 @@
 
 @media (min-width: 1024px) {
   .hero-board {
-  display: block;
+    display: block;
   }
 }
 
@@ -427,13 +385,13 @@
   inset: 0;
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
-  border-radius: 24px;
+  border-radius: var(--radius-2xl);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .kanban-column {
@@ -441,8 +399,8 @@
   min-width: 280px;
   background: rgba(248, 250, 252, 0.5);
   backdrop-filter: blur(2px);
-  border-radius: 16px;
-  padding: 1rem;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-md);
   border: 1px solid rgba(226, 232, 240, 0.6);
   display: flex;
   flex-direction: column;
@@ -453,14 +411,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding: 0 0.25rem;
+  margin-bottom: var(--spacing-md);
+  padding: 0 var(--spacing-xs);
 }
 
 .kanban-title-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .kanban-dot {
@@ -471,16 +429,16 @@
 
 .kanban-title {
   font-weight: 600;
-  color: #334155;
+  color: var(--color-slate-700);
 }
 
 .kanban-count {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--color-slate-400);
   font-weight: 500;
-  background: #f1f5f9;
-  padding: 0.125rem 0.5rem;
-  border-radius: 9999px;
+  background: var(--color-slate-100);
+  padding: 0.125rem var(--spacing-sm);
+  border-radius: var(--radius-full);
 }
 
 .kanban-cards {
@@ -491,15 +449,15 @@
 
 .kanban-card {
   background: white;
-  padding: 1rem;
-  border-radius: 12px;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--color-slate-100);
   margin-bottom: 0.75rem;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .kanban-card:hover {
@@ -519,16 +477,16 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-sm);
 }
 
 .kanban-card-tag {
   font-size: 10px;
   font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: 9999px;
-  background: #f1f5f9;
-  color: #64748b;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
+  background: var(--color-slate-100);
+  color: var(--color-slate-500);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -536,7 +494,7 @@
 .kanban-card-title {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1e293b;
+  color: var(--color-slate-800);
   margin-bottom: 0.75rem;
   line-height: 1.4;
 }
@@ -563,7 +521,7 @@
 .kanban-card-date {
   display: flex;
   align-items: center;
-  color: #cbd5e1;
+  color: var(--color-slate-300);
   font-size: 0.75rem;
 }
 
