@@ -1,8 +1,9 @@
 <section id="features" class="features-section">
   <div class="container">
     <div class="features-header">
-      <p class="features-subtitle">Multiple Views</p>
-      <h2 class="features-title">See your work, your way</h2>
+      <h2 class="features-title">
+        See your work, <span class="features-title-gradient">your way</span>
+      </h2>
       <p class="features-description">
         Choose the view that best fits your workflow. Switch between List, Timeline, and Calendar views with a single click.
       </p>
@@ -145,15 +146,6 @@
   margin-right: auto;
 }
 
-.features-subtitle {
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #f97316;
-  margin-bottom: 1rem;
-}
-
 .features-title {
   font-size: 2.25rem;
   font-weight: 700;
@@ -166,6 +158,13 @@
   .features-title {
   font-size: 3rem;
   }
+}
+
+.features-title-gradient {
+  background: linear-gradient(to right, #155dfc, #7f22fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .features-description {
