@@ -1,4 +1,12 @@
 <div class="auth-page">
+  <%= link_to root_path, class: "auth-back-button" do %>
+    <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Back to home
+  <% end %>
+
   <div class="auth-bg">
     <div class="auth-gradient-1"></div>
     <div class="auth-gradient-2"></div>
@@ -6,7 +14,7 @@
   </div>
 
   <div class="auth-container">
-    <div class="auth-logo">
+    <%= link_to root_path, class: "auth-logo" do %>
       <div class="logo-icon">
         <svg style="margin: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -15,7 +23,7 @@
         </svg>
       </div>
       <span class="logo-text">Flow</span>
-    </div>
+    <% end %>
 
   <h1>Reset Password</h1>
   <p class="subtitle">Choose a new password for your account</p>
