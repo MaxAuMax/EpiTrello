@@ -2,7 +2,7 @@
   <!-- Navigation -->
   <nav class="landing-nav">
     <div class="container">
-      <div class="landing-logo">
+      <a href="#" class="landing-logo">
         <div class="landing-logo-icon">
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -12,9 +12,10 @@
         <span class="landing-logo-text">
           Flow
         </span>
-      </div>
+      </a>
 
       <div class="landing-nav-links">
+        <a href="#partners">Partners</a>
         <a href="#features">Features</a>
         <a href="#cta">Get Started</a>
       </div>
@@ -30,7 +31,7 @@
     <%= render partial: 'pages/kanban_hero' %>
 
     <!-- Social Proof Strip -->
-    <div class="social-proof">
+    <div id="partners" class="social-proof">
       <div class="container">
         <p class="social-proof-title">
           Powering next-gen companies
@@ -45,7 +46,10 @@
       </div>
     </div>
 
-    <%= render partial: 'pages/feature_views' %>
+    <!-- Features Section -->
+    <div class="container">
+      <%= render partial: 'pages/feature_views' %>
+    </div>
 
     <!-- Footer -->
     <footer class="landing-footer">
@@ -111,6 +115,11 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   .landing-logo-icon {
@@ -298,3 +307,12 @@
     color: #94a3b8;
   }
 </style>
+
+<script>
+  // Navigate to root on page load if not already there
+  window.addEventListener('load', function() {
+    if (window.location.hash) {
+      window.location.href = '/';
+    }
+  });
+</script>
