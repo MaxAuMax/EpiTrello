@@ -1,0 +1,86 @@
+name: check pull request
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+concurrency:
+  group: check-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  test_and_check:
+    name: check pr
+    runs-on: ubuntu-latest
+
+    env:
+      # App env - hardcoded for test environment
+      RAILS_ENV: test
+      DATABASE_HOST: mariadb
+      DATABASE_USER: testuser
+      DATABASE_PASSWORD: testpassword
+
+      # DB env - MariaDB container initialization
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: epitrello
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx (for caching)
+      uses: docker/setup-buildx-action@v3
+
+    - name: Create .env file for CI
+      run: |
+        cat > .env << EOF
+        DATABASE_HOST=mariadb
+        DATABASE_USER=testuser
+        DATABASE_PASSWORD=testpassword
+        RAILS_ENV=test
+        MYSQL_ROOT_PASSWORD=rootpassword
+        MYSQL_DATABASE=epitrello
+        MYSQL_USER=testuser
+        MYSQL_PASSWORD=testpassword
+        EOF
+
+    - name: Build and cache Docker images
+      run: docker compose build --build-arg BUILDKIT_INLINE_CACHE=1
+
+    - name: Start containers
+      run: docker compose up -d
+
+    - name: Install gems
+      run: |
+        docker compose exec -T web bundle install
+
+    - name: Wait for database to be ready
+      run: |
+        echo "Waiting for MariaDB to be ready..."
+        timeout 90 bash -c 'until docker compose exec -T db mariadb -u root -prootpassword -e "SELECT 1" >/dev/null 2>&1; do echo "Waiting..."; sleep 3; done'
+        echo "MariaDB is ready!"
+
+    - name: Create test database and grant permissions
+      run: |
+        docker compose exec -T db mariadb -u root -prootpassword -e "CREATE DATABASE IF NOT EXISTS epitrello_test; GRANT ALL PRIVILEGES ON epitrello_test.* TO 'testuser'@'%'; FLUSH PRIVILEGES;"
+        echo "Test database created and permissions granted"
+
+    - name: Setup test database schema
+      run: |
+        docker compose exec -T web bin/rails db:test:prepare --verbose
+
+    - name: Show logs on failure
+      if: failure()
+      run: |
+        echo "=== Web container logs ==="
+        docker compose logs web
+        echo "=== DB container logs ==="
+        docker compose logs db
+    - name: Run tests
+      run: |
+        docker compose exec -T web bin/rails test
+
+    - name: Cleanup
+      if: always()
+      run: docker compose down -v
