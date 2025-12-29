@@ -1,0 +1,554 @@
+<section class="hero-section">
+  <div class="hero-bg">
+    <div class="hero-gradient-1"></div>
+    <div class="hero-gradient-2"></div>
+    <div class="hero-gradient-3"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span class="hero-badge-text">Beta is in the works 🚧</span>
+        </div>
+
+        <h1 class="hero-title">
+          Move work <br>
+          <span class="text-gradient">forward.</span>
+        </h1>
+
+        <p class="hero-description">
+          The flexible platform that connects your team's work to their goals. 
+          Visualize progress, automate workflows, and ship faster.
+        </p>
+
+        <div class="hero-buttons">
+          <%= link_to new_user_registration_path, class: "btn btn-primary" do %>
+            Start for free
+            <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          <% end %>
+        </div>
+
+        <div class="hero-social-proof">
+          <div class="hero-avatars">
+            <% 4.times do %>
+              <div class="hero-avatar">
+                <svg style="width: 16px; height: 16px; color: var(--color-slate-400);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </div>
+            <% end %>
+          </div>
+          <p>Trusted by 10,000+ teams</p>
+        </div>
+      </div>
+
+      <div class="hero-board">
+        <div class="hero-board-inner">
+          <!-- To Do Column -->
+          <div class="kanban-column">
+            <div class="kanban-header">
+              <div class="kanban-title-group">
+                <div class="kanban-dot" style="background: var(--color-slate-400);" ></div>
+                <h3 class="kanban-title">To Do</h3>
+                <span class="kanban-count">3</span>
+              </div>
+              <svg style="width: 16px; height: 16px; color: var(--color-slate-300);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <div class="kanban-cards">
+              <div class="kanban-card">
+                <div class="kanban-card-accent" style="background: var(--color-blue-500);"></div>
+                <div class="kanban-card-header">
+                  <span class="kanban-card-tag">Strategy</span>
+                  <svg style="width: 16px; height: 16px; color: var(--color-slate-200);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </div>
+                <h3 class="kanban-card-title">Research competitors</h3>
+                <div class="kanban-card-footer">
+                  <div class="kanban-card-avatar" style="background: var(--color-blue-600);"></div>
+                  <div class="kanban-card-date">
+                    <svg style="width: 12px; height: 12px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Today</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-card">
+                <div class="kanban-card-accent" style="background: var(--color-purple-500);"></div>
+                <div class="kanban-card-header">
+                  <span class="kanban-card-tag">Product</span>
+                  <svg style="width: 16px; height: 16px; color: var(--color-slate-200);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </div>
+                <h3 class="kanban-card-title">Draft product requirements</h3>
+                <div class="kanban-card-footer">
+                  <div class="kanban-card-avatar" style="background: var(--color-purple-600);"></div>
+                  <div class="kanban-card-date">
+                    <svg style="width: 12px; height: 12px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Today</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-fade"></div>
+            </div>
+          </div>
+
+          <!-- In Progress Column -->
+          <div class="kanban-column">
+            <div class="kanban-header">
+              <div class="kanban-title-group">
+                <div class="kanban-dot" style="background: var(--color-orange-600);"></div>
+                <h3 class="kanban-title">In Progress</h3>
+                <span class="kanban-count">2</span>
+              </div>
+              <svg style="width: 16px; height: 16px; color: var(--color-slate-300);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <div class="kanban-cards">
+              <div class="kanban-card">
+                <div class="kanban-card-accent" style="background: var(--color-pink-500);"></div>
+                <div class="kanban-card-header">
+                  <span class="kanban-card-tag">Design</span>
+                  <svg style="width: 16px; height: 16px; color: var(--color-slate-200);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </div>
+                <h3 class="kanban-card-title">Design system audit</h3>
+                <div class="kanban-card-footer">
+                  <div class="kanban-card-avatar" style="background: var(--color-pink-600);"></div>
+                  <div class="kanban-card-date">
+                      <svg style="width: 12px; height: 12px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <span>Today</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-fade"></div>
+            </div>
+          </div>
+
+          <!-- Done Column -->
+          <div class="kanban-column">
+            <div class="kanban-header">
+              <div class="kanban-title-group">
+                <div class="kanban-dot" style="background: var(--color-green-600);"></div>
+                <h3 class="kanban-title">Done</h3>
+                <span class="kanban-count">4</span>
+              </div>
+              <svg style="width: 16px; height: 16px; color: var(--color-slate-300);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </div>
+            <div class="kanban-cards">
+              <div class="kanban-card">
+                <div class="kanban-card-accent" style="background: var(--color-green-500);"></div>
+                <div class="kanban-card-header">
+                  <span class="kanban-card-tag">Marketing</span>
+                  <svg style="width: 16px; height: 16px; color: var(--color-slate-200);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </div>
+                <h3 class="kanban-card-title">Q3 Marketing Plan</h3>
+                  <div class="kanban-card-footer">
+                    <div class="kanban-card-avatar" style="background: var(--color-green-600);"></div>
+                    <div class="kanban-card-date">
+                      <svg style="width: 12px; height: 12px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <span>Today</span>
+                    </div>
+                  </div>
+              </div>
+
+              <div class="kanban-fade"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--color-slate-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--spacing-4xl);
+  padding-bottom: var(--spacing-4xl);
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-gradient-1 {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 600px;
+  height: 600px;
+  background: rgba(251, 146, 60, 0.2);
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.hero-gradient-2 {
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  background: rgba(96, 165, 250, 0.2);
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.hero-gradient-3 {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 400px;
+  height: 400px;
+  background: rgba(244, 114, 182, 0.15);
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-2xl);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hero-text {
+  max-width: 42rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0.75rem;
+  border-radius: var(--radius-full);
+  background: white;
+  border: 1px solid var(--color-slate-200);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-bottom: var(--spacing-lg);
+}
+
+.hero-badge-dot {
+  display: flex;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background: var(--color-orange-500);
+}
+
+.hero-badge-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-slate-500);
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-slate-900);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.1;
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 4.5rem;
+  }
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  color: var(--color-slate-500);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.75;
+  max-width: 32rem;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.hero-social-proof {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: 0.875rem;
+  color: var(--color-slate-400);
+}
+
+.hero-avatars {
+  display: flex;
+  margin-left: -0.5rem;
+}
+
+.hero-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background: var(--color-slate-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-left: -0.5rem;
+}
+
+.hero-board {
+  position: relative;
+  display: none;
+  height: 600px;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .hero-board {
+    display: block;
+  }
+}
+
+.hero-board-inner {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: var(--spacing-lg);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-md);
+  overflow: hidden;
+}
+
+@media (min-width: 1500px) {
+  .hero-board-inner {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 0;
+  background: rgba(248, 250, 252, 0.5);
+  backdrop-filter: blur(2px);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-md);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+
+.kanban-column:nth-child(3) {
+  display: none;
+}
+
+@media (min-width: 1500px) {
+  .kanban-column:nth-child(3) {
+    display: flex;
+  }
+}
+
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding: 0 var(--spacing-xs);
+}
+
+.kanban-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.kanban-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.kanban-title {
+  font-weight: 600;
+  color: var(--color-slate-700);
+}
+
+.kanban-count {
+  font-size: 0.75rem;
+  color: var(--color-slate-400);
+  font-weight: 500;
+  background: var(--color-slate-100);
+  padding: 0.125rem var(--spacing-sm);
+  border-radius: var(--radius-full);
+}
+
+.kanban-cards {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.kanban-card {
+  background: white;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-slate-100);
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.kanban-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.kanban-card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.kanban-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-sm);
+}
+
+.kanban-card-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
+  background: var(--color-slate-100);
+  color: var(--color-slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kanban-card-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-slate-800);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.kanban-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kanban-card-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: white;
+  font-weight: 700;
+}
+
+.kanban-card-date {
+  display: flex;
+  align-items: center;
+  color: var(--color-slate-300);
+  font-size: 0.75rem;
+}
+
+.kanban-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  background: linear-gradient(to top, rgba(248, 250, 252, 0.5), transparent);
+  pointer-events: none;
+}
+</style>
