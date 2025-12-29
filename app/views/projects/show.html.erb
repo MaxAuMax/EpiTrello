@@ -1,58 +1,385 @@
-<%= link_to 'Add task', new_project_task_path(@project), class: 'btn-add' %>
-<%= link_to 'Back to projects', root_path, class: 'btn-back' %>
-
-<h1><%= @project.name %></h1>
-
-<p><%= @project.description %></p>
-
-<p>State of project : <%= @project_status rescue "No status found" %></p>
-
-<p>Number of participants : <%= @project.users.count == 1 ? "Only you" : @project.users.count %></p>
-
-
-
-<% if @project_tasks.blank? %>
-    <h2>Aucune tâche pour le moment</h2>
-<% else %>
-    <h2>Tâches</h2>
-    <div class="task-carousel">
-        <% @project_tasks.each do |task| %>
-            <div class="task-card">
-                <h2><%= task.title %></h2>
-                <p>Description: <%= task.description %></p>
-                <p>Status: <%= task.task_status&.name %></p>
-                <p>Due date: <%= task.due_date&.strftime("%d/%m/%Y") || "Not set" %></p>
-                <p>Assigned to: <%= task.assignee&.username || "Not assigned" %></p>
-                <%= link_to "Show", project_task_path(task.project, task) %>
-                <%= link_to "Edit", edit_project_task_path(task.project, task) %>
-                <%= link_to "Destroy", project_task_path(task.project, task), data: { "turbo-method": :delete , turbo_confirm: 'Are you sure to delete task ?' } %>
-            </div>
-        <% end %>
+<!-- Board Header -->
+<div class="board-header">
+  <div class="board-header-container">
+    <div class="board-header-main">
+      <div class="board-title-section">
+        <h1 class="board-title"><%= @project.name %></h1>
+        <span class="board-status-badge">
+          <%= @project_status || "No status" %>
+        </span>
+      </div>
+      <p class="board-description"><%= @project.description %></p>
     </div>
-<% end %>
+    
+    <div class="board-header-actions">
+      <div class="board-meta">
+        <span class="board-meta-item">
+          <svg style="width: 18px; height: 18px; color: var(--color-slate-400);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <%= @project.users.count == 1 ? "Only you" : "#{@project.users.count} members" %>
+        </span>
+      </div>
+      <%= link_to new_project_task_path(@project), class: 'btn-add' do %>
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Task
+      <% end %>
+      <%= link_to root_path, class: 'btn-back' do %>
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back
+      <% end %>
+    </div>
+  </div>
+</div>
 
-<div style="width: 20%; heigth: 20%">
-    <canvas id="myChart"></canvas>
+<!-- Board Container -->
+<div class="board-container">
+  <div class="board-scroll-area">
+    <% if @project_tasks.blank? %>
+      <!-- Empty State -->
+      <div class="board-empty-state">
+        <div class="empty-state-content">
+          <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <h3 class="empty-state-title">Your board is empty</h3>
+          <p class="empty-state-description">Create your first task to start organizing your project</p>
+          <%= link_to new_project_task_path(@project), class: 'empty-state-button' do %>
+            <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Create First Task
+          <% end %>
+        </div>
+        
+        <!-- Empty board visualization -->
+        <div class="empty-board-preview">
+          <div class="empty-column">
+            <div class="empty-column-header">
+              <div class="empty-column-dot"></div>
+              <div class="empty-column-title"></div>
+            </div>
+            <div class="empty-card"></div>
+            <div class="empty-card"></div>
+          </div>
+          <div class="empty-column">
+            <div class="empty-column-header">
+              <div class="empty-column-dot"></div>
+              <div class="empty-column-title"></div>
+            </div>
+            <div class="empty-card"></div>
+          </div>
+          <div class="empty-column">
+            <div class="empty-column-header">
+              <div class="empty-column-dot"></div>
+              <div class="empty-column-title"></div>
+            </div>
+            <div class="empty-card"></div>
+            <div class="empty-card"></div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- Board columns will be added in next task -->
+      <div class="board-columns">
+        <!-- Placeholder for columns -->
+      </div>
+    <% end %>
+  </div>
 </div>
 
 <style>
+/* Board Header */
+.board-header {
+  background: white;
+  border-bottom: 1px solid var(--color-slate-200);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+  width: 100%;
+  margin: 0;
+}
 
-    .task-carousel {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        height: 15%;
-        width: 100%;
-        overflow-y: scroll;
-    }
+.board-header-container {
+  padding: var(--spacing-md) var(--spacing-xl);
+  max-width: 100%;
+}
 
-    .task-card {
-        box-shadow: 0 0 10px #c9c9c9;
-        border: 1px solid #c9c9c9;
-        border-radius: 5px;
-        margin: 1rem;
-        padding: .5rem;
-        width: fit-content;
-    }
+.board-header-main {
+  margin-bottom: var(--spacing-sm);
+}
 
+.board-title-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
+}
+
+.board-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+}
+
+.board-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px var(--spacing-sm);
+  background: linear-gradient(135deg, var(--color-slate-100) 0%, var(--color-slate-50) 100%);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-slate-600);
+}
+
+.board-description {
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+  margin: 0;
+  max-width: 800px;
+  line-height: 1.4;
+}
+
+.board-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.board-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.board-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+  font-weight: 500;
+}
+
+/* Board Container */
+.board-container {
+  height: calc(100vh - 140px);
+  background: var(--color-slate-50);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+}
+
+.board-scroll-area {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--spacing-lg);
+  flex: 1;
+  height: 100%;
+}
+
+.board-scroll-area::-webkit-scrollbar {
+  height: 12px;
+}
+
+.board-scroll-area::-webkit-scrollbar-track {
+  background: var(--color-slate-100);
+  border-radius: var(--radius-full);
+}
+
+.board-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--color-slate-300);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-slate-100);
+}
+
+.board-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
+}
+
+/* Empty State */
+.board-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  text-align: center;
+  height: 100%;
+  gap: var(--spacing-3xl);
+}
+
+.empty-state-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--color-slate-100) 0%, var(--color-slate-50) 100%);
+  border-radius: var(--radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-lg);
+  border: 2px solid var(--color-slate-200);
+}
+
+.empty-state-icon svg {
+  width: 32px;
+  height: 32px;
+  color: var(--color-slate-400);
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.empty-state-description {
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+  margin: 0 0 var(--spacing-lg) 0;
+}
+
+.empty-state-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-slate-900) 0%, var(--color-slate-800) 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Empty Board Preview */
+.empty-board-preview {
+  display: flex;
+  gap: var(--spacing-lg);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.empty-column {
+  width: 280px;
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-column-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.empty-column-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--color-slate-300);
+  border-radius: 50%;
+}
+
+.empty-column-title {
+  height: 16px;
+  width: 80px;
+  background: var(--color-slate-200);
+  border-radius: var(--radius-sm);
+}
+
+.empty-card {
+  background: var(--color-slate-50);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  height: 80px;
+  margin-bottom: var(--spacing-sm);
+}
+
+
+.empty-state-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-slate-900) 0%, var(--color-slate-800) 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Empty Board Preview */
+.board-columns {
+  display: flex;
+  gap: var(--spacing-lg);
+  height: 100%;
+  align-items: flex-start;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .board-header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .board-title {
+    font-size: 1.25rem;
+  }
+  
+  .board-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .board-container {
+    padding: var(--spacing-md);
+    height: calc(100vh - 160px);
+  }
+}
 </style>
