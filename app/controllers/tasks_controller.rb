@@ -1,8 +1,8 @@
 class TasksController < ApplicationController
 
     before_action :authenticate_user!
-    before_action :set_project
-    before_action :set_task, only: [:show, :edit, :update, :destroy]
+    before_action :set_project, except: [:update_status]
+    before_action :set_task, only: [:show, :edit, :update, :destroy, :update_status]
     before_action :load_status_options, only: [:new, :edit, :create, :update]
 
     def index
@@ -45,14 +45,26 @@ class TasksController < ApplicationController
         redirect_to project_tasks_path(@project), notice: 'Task was successfully deleted.'
     end
 
+    def update_status
+        if @task.update(task_status_id: params[:task_status_id])
+            head :ok
+        else
+            head :unprocessable_entity
+        end
+    end
+
     private
 
     def set_project
-        @project = Project.find(params[:project_id])
+        @project = Project.find(params[:project_id]) if params[:project_id]
     end
 
     def set_task
-        @task = @project.tasks.find(params[:id])
+        if params[:project_id]
+            @task = @project.tasks.find(params[:id])
+        else
+            @task = Task.find(params[:id])
+        end
     end
 
     def task_params

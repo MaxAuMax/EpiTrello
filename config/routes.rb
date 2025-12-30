@@ -19,4 +19,7 @@ Rails.application.routes.draw do
   resources :projects do
     resources :tasks
   end
+
+  # Task status update for drag & drop
+  patch 'tasks/:id/update_status', to: 'tasks#update_status', as: 'update_task_status'
 end
