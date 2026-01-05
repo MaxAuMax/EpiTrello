@@ -11,10 +11,13 @@ export default class extends Controller {
   connect() {
     this.sortable = Sortable.create(this.element, {
       group: "tasks",
-      animation: 150,
+      animation: 0,
       ghostClass: "task-card-ghost",
       dragClass: "task-card-dragging",
-      onEnd: this.handleDrop.bind(this)
+      filter: ".column-empty-state",
+      onEnd: this.handleDrop.bind(this),
+      onRemove: this.handleRemove.bind(this),
+      onAdd: this.handleAdd.bind(this)
     })
   }
 
@@ -22,6 +25,19 @@ export default class extends Controller {
     if (this.sortable) {
       this.sortable.destroy()
     }
+  }
+
+  handleRemove(event) {
+    // Check if source column is now empty and show empty state immediately
+    const remainingCards = event.from.querySelectorAll('.task-card').length
+    if (remainingCards === 0) {
+      this.showEmptyState(event.from)
+    }
+  }
+
+  handleAdd(event) {
+    // Hide empty state when card is added to column
+    this.hideEmptyState(event.to)
   }
 
   handleDrop(event) {
@@ -72,6 +88,11 @@ export default class extends Controller {
     if (sourceCount) {
       const currentCount = parseInt(sourceCount.textContent)
       sourceCount.textContent = currentCount - 1
+      
+      // Show empty state if no cards left
+      if (currentCount - 1 === 0) {
+        this.showEmptyState(event.from)
+      }
     }
 
     // Update destination column count
@@ -80,6 +101,25 @@ export default class extends Controller {
     if (destCount) {
       const currentCount = parseInt(destCount.textContent)
       destCount.textContent = currentCount + 1
+      
+      // Hide empty state if column now has cards
+      if (currentCount === 0) {
+        this.hideEmptyState(event.to)
+      }
+    }
+  }
+
+  hideEmptyState(container) {
+    const emptyState = container.querySelector('.column-empty-state')
+    if (emptyState) {
+      emptyState.style.display = 'none'
+    }
+  }
+
+  showEmptyState(container) {
+    const emptyState = container.querySelector('.column-empty-state')
+    if (emptyState) {
+      emptyState.style.display = 'flex'
     }
   }
 }
