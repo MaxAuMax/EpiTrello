@@ -73,10 +73,11 @@
             <div class="board-column-header">
               <div class="column-header-main">
                 <div class="column-dot" style="background: <%= case status.name
+                  when 'Backlog' then 'var(--color-slate-400)'
                   when 'To Do' then 'var(--color-blue-500)'
                   when 'In Progress' then 'var(--color-orange-600)'
                   when 'Completed' then 'var(--color-green-600)'
-                  when 'On Hold' then 'var(--color-slate-400)'
+                  when 'On Hold' then 'var(--color-red-600)'
                   else 'var(--color-slate-400)'
                 end %>;"></div>
                 <h3 class="column-title"><%= status.name %></h3>
