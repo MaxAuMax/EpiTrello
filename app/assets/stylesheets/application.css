@@ -136,14 +136,19 @@ body {
 }
 
 .btn-secondary {
-  background: white;
+  background: var(--color-slate-100);
   color: var(--color-slate-900);
   box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary:hover {
-  background: var(--color-slate-50);
+  background: var(--color-slate-200);
   transform: scale(1.05);
+}
+
+.btn-sm {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.875rem;
 }
 
 /* Logo Icon Styles */

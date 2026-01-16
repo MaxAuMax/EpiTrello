@@ -152,14 +152,38 @@
             </div>
 
             <!-- Column Footer -->
-            <div class="board-column-footer">
-              <%= link_to new_project_task_path(@project, task_status_id: status.id), class: 'add-card-button' do %>
+            <div class="board-column-footer" data-controller="add-card">
+              <!-- Add Card Button -->
+              <button type="button" class="add-card-button" data-add-card-target="button" data-action="click->add-card#showForm">
                 <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
                 Add card
-              <% end %>
+              </button>
+
+              <!-- Inline Card Form -->
+              <div class="add-card-form" data-add-card-target="form" style="display: none;">
+                <%= form_with(model: [@project, @project.tasks.build(task_status: status)], 
+                              class: 'inline-card-form',
+                              data: { action: 'keydown->add-card#handleKeydown' }) do |f| %>
+                  <%= f.hidden_field :task_status_id, value: status.id %>
+                  
+                  <div class="inline-card-input">
+                    <%= f.text_field :title, 
+                        placeholder: 'Enter card title...', 
+                        class: 'inline-card-title',
+                        required: true %>
+                  </div>
+
+                  <div class="inline-card-actions">
+                    <%= f.button 'Add card', type: 'submit', class: 'btn btn-primary btn-sm' %>
+                    <button type="button" class="btn btn-secondary btn-sm" data-action="click->add-card#hideForm">
+                      Cancel
+                    </button>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
         <% end %>
@@ -563,11 +587,59 @@
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: all var(--transition-base);
+  border: none;
+  cursor: pointer;
 }
 
 .add-card-button:hover {
   background: var(--color-slate-200);
   color: var(--color-slate-900);
+}
+
+/* Inline Card Form */
+.add-card-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.inline-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.inline-card-input {
+  width: 100%;
+}
+
+.inline-card-title {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-blue-500);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-slate-900);
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-base);
+}
+
+.inline-card-title:focus {
+  outline: none;
+  border-color: var(--color-blue-600);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.inline-card-title::placeholder {
+  color: var(--color-slate-400);
+}
+
+.inline-card-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
 }
 
 /* Task Card Component */

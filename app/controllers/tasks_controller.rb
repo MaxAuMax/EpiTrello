@@ -23,9 +23,15 @@ class TasksController < ApplicationController
     def create
         @task = @project.tasks.build(task_params)
         if @task.save
-            redirect_to project_tasks_path(@project), notice: 'Task was successfully created.'
+            respond_to do |format|
+                format.html { redirect_to project_path(@project), notice: 'Task was successfully created.' }
+                format.turbo_stream { redirect_to project_path(@project), status: :see_other }
+            end
         else
-            render :new
+            respond_to do |format|
+                format.html { render :new }
+                format.turbo_stream { render turbo_stream: turbo_stream.replace("new_task_form", partial: "tasks/form", locals: { task: @task, project: @project }) }
+            end
         end
     end
 
