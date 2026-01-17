@@ -44,7 +44,7 @@
 </div>
 
 <!-- Board Container -->
-<div class="board-container">
+<div class="board-container" data-controller="modal">
   <div class="board-scroll-area">
     <% if TaskStatus.none? %>
       <!-- Empty State - No statuses configured -->
@@ -64,132 +64,136 @@
       </div>
     <% else %>
 
-      <!-- Board Columns -->
-      <div class="board-columns">
-        <% TaskStatus.all.each do |status| %>
-          <% status_tasks = @project_tasks.where(task_status: status) %>
-          <div class="board-column">
-            <!-- Column Header -->
-            <div class="board-column-header">
-              <div class="column-header-main">
-                <div class="column-dot" style="background: <%= case status.name
-                  when 'Backlog' then 'var(--color-slate-400)'
-                  when 'To Do' then 'var(--color-blue-500)'
-                  when 'In Progress' then 'var(--color-orange-600)'
-                  when 'Completed' then 'var(--color-green-600)'
-                  when 'On Hold' then 'var(--color-red-600)'
-                  else 'var(--color-slate-400)'
-                end %>;"></div>
-                <h3 class="column-title"><%= status.name %></h3>
-                <span class="column-count"><%= status_tasks.count %></span>
-              </div>
-            </div>
-
-            <!-- Column Body -->
-            <div class="board-column-cards" 
-                 data-controller="sortable"
-                 data-sortable-status-value="<%= status.id %>">
-              <% if status_tasks.blank? %>
-                <!-- Empty Column State -->
-                <div class="column-empty-state">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                  </svg>
-                  <p>No tasks yet</p>
-                </div>
-              <% else %>
-                <!-- Task Cards -->
-                <% status_tasks.each do |task| %>
-                  <%= link_to project_task_path(@project, task), 
-                      class: 'task-card',
-                      data: { task_id: task.id } do %>
-                    <!-- Card Header -->
-                    <div class="task-card-header">
-                      <h4 class="task-card-title"><%= task.title %></h4>
-                      <button class="task-card-menu" type="button">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <circle cx="12" cy="12" r="1"></circle>
-                          <circle cx="19" cy="12" r="1"></circle>
-                          <circle cx="5" cy="12" r="1"></circle>
-                        </svg>
-                      </button>
-                    </div>
-
-                    <!-- Card Description -->
-                    <% if task.description.present? %>
-                      <p class="task-card-description"><%= truncate(task.description, length: 80) %></p>
-                    <% end %>
-
-                    <!-- Card Footer -->
-                    <div class="task-card-footer">
-                      <div class="task-card-meta">
-                        <!-- Due Date -->
-                        <% if task.due_date.present? %>
-                          <span class="task-meta-item task-due-date">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                              <line x1="16" y1="2" x2="16" y2="6"></line>
-                              <line x1="8" y1="2" x2="8" y2="6"></line>
-                              <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                            <%= task.due_date.strftime("%b %d") %>
-                          </span>
-                        <% end %>
-                      </div>
-
-                      <!-- Assignee -->
-                      <% if task.assignee.present? %>
-                        <div class="task-assignee" title="<%= task.assignee.username %>">
-                          <%= task.assignee.username.first.upcase %>
-                        </div>
-                      <% end %>
-                    </div>
-                  <% end %>
-                <% end %>
-              <% end %>
-            </div>
-
-            <!-- Column Footer -->
-            <div class="board-column-footer" data-controller="add-card">
-              <!-- Add Card Button -->
-              <button type="button" class="add-card-button" data-add-card-target="button" data-action="click->add-card#showForm">
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Add card
-              </button>
-
-              <!-- Inline Card Form -->
-              <div class="add-card-form" data-add-card-target="form" style="display: none;">
-                <%= form_with(model: [@project, @project.tasks.build(task_status: status)], 
-                              class: 'inline-card-form',
-                              data: { action: 'keydown->add-card#handleKeydown' }) do |f| %>
-                  <%= f.hidden_field :task_status_id, value: status.id %>
-                  
-                  <div class="inline-card-input">
-                    <%= f.text_field :title, 
-                        placeholder: 'Enter card title...', 
-                        class: 'inline-card-title',
-                        required: true %>
-                  </div>
-
-                  <div class="inline-card-actions">
-                    <%= f.button 'Add card', type: 'submit', class: 'btn btn-primary btn-sm' %>
-                    <button type="button" class="btn btn-secondary btn-sm" data-action="click->add-card#hideForm">
-                      Cancel
-                    </button>
-                  </div>
-                <% end %>
-              </div>
+    <!-- Board Columns -->
+    <div class="board-columns">
+      <% TaskStatus.all.each do |status| %>
+        <% status_tasks = @project_tasks.where(task_status: status) %>
+        <div class="board-column">
+          <!-- Column Header -->
+          <div class="board-column-header">
+            <div class="column-header-main">
+              <div class="column-dot" style="background: <%= case status.name
+                when 'Backlog' then 'var(--color-slate-400)'
+                when 'To Do' then 'var(--color-blue-500)'
+                when 'In Progress' then 'var(--color-orange-600)'
+                when 'Completed' then 'var(--color-green-600)'
+                when 'On Hold' then 'var(--color-red-600)'
+                else 'var(--color-slate-400)'
+              end %>;"></div>
+              <h3 class="column-title"><%= status.name %></h3>
+              <span class="column-count"><%= status_tasks.count %></span>
             </div>
           </div>
-        <% end %>
-      </div>
+
+          <!-- Column Body -->
+          <div
+            class="board-column-cards" 
+            data-controller="sortable"
+            data-sortable-status-value="<%= status.id %>"
+          >
+            <% if status_tasks.blank? %>
+              <!-- Empty Column State -->
+              <div class="column-empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <p>No tasks yet</p>
+              </div>
+            <% else %>
+              <!-- Task Cards -->
+              <% status_tasks.each do |task| %>
+                <%= link_to project_task_path(@project, task), 
+                    class: 'task-card',
+                    data: { 
+                      task_id: task.id,
+                      turbo_frame: "task_details",
+                      action: "click->modal#open"
+                    } do %>
+                  <!-- Card Header -->
+                  <div class="task-card-header">
+                    <h4 class="task-card-title"><%= task.title %></h4>
+                  </div>
+
+                  <!-- Card Description -->
+                  <% if task.description.present? %>
+                    <p class="task-card-description"><%= truncate(task.description, length: 80) %></p>
+                  <% end %>
+
+                  <!-- Card Footer -->
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <!-- Due Date -->
+                      <% if task.due_date.present? %>
+                        <span class="task-meta-item task-due-date">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                          </svg>
+                          <%= task.due_date.strftime("%b %d") %>
+                        </span>
+                      <% end %>
+                    </div>
+
+                    <!-- Assignee -->
+                    <% if task.assignee.present? %>
+                      <div class="task-assignee" title="<%= task.assignee.username %>">
+                        <%= task.assignee.username.first.upcase %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <!-- Column Footer -->
+          <div class="board-column-footer" data-controller="add-card">
+            <!-- Add Card Button -->
+            <button type="button" class="add-card-button" data-add-card-target="button" data-action="click->add-card#showForm">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add card
+            </button>
+
+            <!-- Inline Card Form -->
+            <div class="add-card-form" data-add-card-target="form" style="display: none;">
+              <%= form_with(model: [@project, @project.tasks.build(task_status: status)], 
+                            class: 'inline-card-form',
+                            data: { action: 'keydown->add-card#handleKeydown' }) do |f| %>
+                <%= f.hidden_field :task_status_id, value: status.id %>
+                
+                <div class="inline-card-input">
+                  <%= f.text_field :title, 
+                      placeholder: 'Enter card title...', 
+                      class: 'inline-card-title',
+                      required: true %>
+                </div>
+
+                <div class="inline-card-actions">
+                  <%= f.button 'Add card', type: 'submit', class: 'btn btn-primary btn-sm' %>
+                  <button type="button" class="btn btn-secondary btn-sm" data-action="click->add-card#hideForm">
+                    Cancel
+                  </button>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
     <% end %>
   </div>
+
+  <!-- Task Details Modal -->
+  <%= render "shared/modal", title: "Task details" do %>
+    <turbo-frame id="task_details"></turbo-frame>
+  <% end %>
 </div>
 
 <style>
