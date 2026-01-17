@@ -108,7 +108,6 @@
                     class: 'task-card',
                     data: { 
                       task_id: task.id,
-                      turbo_frame: "task_details",
                       action: "click->modal#open"
                     } do %>
                   <!-- Card Header -->
@@ -191,7 +190,7 @@
   </div>
 
   <!-- Task Details Modal -->
-  <%= render "shared/modal", title: "Task details" do %>
+  <%= render "shared/modal" do %>
     <turbo-frame id="task_details"></turbo-frame>
   <% end %>
 </div>

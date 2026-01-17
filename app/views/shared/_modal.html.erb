@@ -1,19 +1,14 @@
 <div data-modal-target="modal" class="task-modal-wrapper hidden">
   <div class="task-modal-backdrop" data-action="click->modal#close">
     <div class="task-modal-content" onclick="event.stopPropagation()">
-      <div class="task-modal-header-wrapper">
-        <h2 class="task-modal-title-main"><%= title %></h2>
-        <button type="button" class="modal-close-button" data-action="click->modal#close" aria-label="Close">
-          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      <div class="task-modal-body-wrapper">
-        <%= yield %>
-      </div>
+      <button type="button" class="modal-close-button-absolute" data-action="click->modal#close" aria-label="Close">
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      
+      <%= yield %>
     </div>
   </div>
 </div>
@@ -57,6 +52,9 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   position: relative;
   animation: modalSlideIn 0.2s ease-out;
+  padding: var(--spacing-xl);
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
 @keyframes modalSlideIn {
@@ -70,22 +68,10 @@
   }
 }
 
-.task-modal-header-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-xl);
-  border-bottom: 1px solid var(--color-slate-200);
-}
-
-.task-modal-title-main {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-slate-900);
-  margin: 0;
-}
-
-.modal-close-button {
+.modal-close-button-absolute {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
   width: 32px;
   height: 32px;
   border-radius: var(--radius-md);
@@ -97,15 +83,10 @@
   justify-content: center;
   transition: all var(--transition-base);
   color: var(--color-slate-600);
+  z-index: 10;
 }
 
-.modal-close-button:hover {
+.modal-close-button-absolute:hover {
   background: var(--color-slate-200);
-}
-
-.task-modal-body-wrapper {
-  padding: var(--spacing-xl);
-  max-height: 60vh;
-  overflow-y: auto;
 }
 </style>

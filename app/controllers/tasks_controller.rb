@@ -12,6 +12,7 @@ class TasksController < ApplicationController
     def show
         @project = Project.find(params[:project_id])
         @task = @project.tasks.find(params[:id])
+        render layout: false
     end
 
     def new
