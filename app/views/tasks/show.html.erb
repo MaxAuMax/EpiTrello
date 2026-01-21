@@ -1,10 +1,8 @@
 <turbo-frame id="task_details">
   <div class="task-details-content">
-    <h2 class="task-title-main"><%= @task.title %></h2>
-    
-    <!-- Status Badge -->
-    <div class="task-detail-row">
-      <span class="task-detail-label">Status</span>
+    <!-- Title Section with Status -->
+    <div class="task-header-section">
+      <h2 class="task-title-main"><%= @task.title %></h2>
       <span class="task-status-badge" style="background: <%= case @task.task_status&.name
         when 'Backlog' then 'var(--color-slate-100)'
         when 'To Do' then 'rgba(59, 130, 246, 0.1)'
@@ -24,40 +22,63 @@
       </span>
     </div>
 
+    <!-- Divider -->
+    <div class="task-divider"></div>
+
+    <!-- Meta Information Grid -->
+    <div class="task-meta-grid">
+      <!-- Due Date -->
+      <% if @task.due_date.present? %>
+        <div class="task-modal-meta-item">
+          <span class="task-detail-label">
+            <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Due Date
+          </span>
+          <div class="task-meta-value">
+            <%= @task.due_date.strftime("%b %d, %Y") %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Assignee -->
+      <% if @task.assignee.present? %>
+        <div class="task-modal-meta-item">
+          <span class="task-detail-label">
+            <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Assigned to
+          </span>
+          <div class="task-assignee-compact">
+            <div class="task-assignee-avatar-small">
+              <%= @task.assignee.username.first.upcase %>
+            </div>
+            <span class="task-meta-value"><%= @task.assignee.username %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
     <!-- Description -->
     <% if @task.description.present? %>
-      <div class="task-detail-row">
-        <span class="task-detail-label">Description</span>
-        <p class="task-detail-text"><%= @task.description %></p>
-      </div>
-    <% end %>
-
-    <!-- Due Date -->
-    <% if @task.due_date.present? %>
-      <div class="task-detail-row">
-        <span class="task-detail-label">Due Date</span>
-        <div class="task-detail-meta">
-          <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
+      <div class="task-description-section">
+        <span class="task-detail-label">
+          <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
           </svg>
-          <%= @task.due_date.strftime("%B %d, %Y") %>
-        </div>
-      </div>
-    <% end %>
-
-    <!-- Assignee -->
-    <% if @task.assignee.present? %>
-      <div class="task-detail-row">
-        <span class="task-detail-label">Assigned to</span>
-        <div class="task-assignee-detail">
-          <div class="task-assignee-avatar-large">
-            <%= @task.assignee.username.first.upcase %>
-          </div>
-          <span class="task-assignee-name"><%= @task.assignee.username %></span>
-        </div>
+          Description
+        </span>
+        <p class="task-detail-text"><%= @task.description %></p>
       </div>
     <% end %>
 
@@ -82,107 +103,3 @@
     </div>
   </div>
 </turbo-frame>
-
-<style>
-turbo-frame#task_details {
-  display: block;
-}
-
-.task-details-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.task-title-main {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-slate-900);
-  margin: 0 0 var(--spacing-sm) 0;
-}
-
-.task-detail-row {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.task-detail-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-slate-500);
-}
-
-.task-status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 600;
-  width: fit-content;
-}
-
-.task-detail-text {
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--color-slate-700);
-  margin: 0;
-}
-
-.task-detail-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-size: 0.875rem;
-  color: var(--color-slate-600);
-  font-weight: 500;
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--color-slate-50);
-  border-radius: var(--radius-md);
-  width: fit-content;
-}
-
-.task-detail-meta svg {
-  flex-shrink: 0;
-}
-
-.task-assignee-detail {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.task-assignee-avatar-large {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-blue-500) 0%, var(--color-purple-500) 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.task-assignee-name {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--color-slate-700);
-}
-
-.task-modal-actions {
-  display: flex;
-  gap: var(--spacing-sm);
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--color-slate-200);
-}
-
-.task-delete-btn:hover {
-  background: var(--color-red-50) !important;
-  color: var(--color-red-600) !important;
-}
-</style>

@@ -1,0 +1,156 @@
+/* ========================================================================
+   Task Modal Styles
+   ========================================================================
+   
+   This file contains styles specific to task CRUD modals (show/edit/new).
+   These styles are separated from the global application.css because they
+   are only used within modal contexts.
+   
+   These styles must be in a separate CSS file (not inline in views) because
+   the modal content is loaded dynamically via JavaScript fetch and injected
+   into turbo-frame elements. Inline <style> tags within turbo-frames are
+   not reliably processed by browsers when injected via JavaScript.
+   
+   By keeping these styles in a separate stylesheet that's loaded with the
+   main application, they're guaranteed to be available when modal content
+   is dynamically loaded.
+   ======================================================================== */
+
+/* Task Details Turbo Frame */
+turbo-frame#task_details {
+  display: flex !important;
+  flex-direction: column;
+  width: 100%;
+}
+
+.task-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+
+/* Header Section */
+.task-header-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.task-title-main {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.task-divider {
+  height: 2px;
+  background: var(--color-slate-200);
+  margin: var(--spacing-sm) 0;
+  width: 100%;
+}
+
+/* Meta Information Grid */
+.task-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  background: var(--color-slate-50);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-slate-200);
+}
+
+.task-modal-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.task-detail-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-slate-500);
+}
+
+.task-meta-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-slate-700);
+}
+
+.task-assignee-compact {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.task-assignee-avatar-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-blue-500) 0%, var(--color-purple-500) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Status Badge */
+.task-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  width: fit-content;
+  letter-spacing: 0.02em;
+}
+
+/* Description Section */
+.task-description-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-slate-200);
+}
+
+.task-detail-text {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-slate-700);
+  margin: 0;
+}
+
+/* Task Modal Actions */
+.task-modal-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-lg);
+  margin-top: auto;
+  border-top: 2px solid var(--color-slate-100);
+}
+
+.task-modal-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.task-delete-btn:hover {
+  background: var(--color-red-50) !important;
+  color: var(--color-red-600) !important;
+  border-color: var(--color-red-200) !important;
+}
