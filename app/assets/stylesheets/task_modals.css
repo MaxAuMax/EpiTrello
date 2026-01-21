@@ -57,11 +57,14 @@ turbo-frame#task_details {
 .task-meta-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-lg);
+  gap: var(--spacing-xl);
   background: var(--color-slate-50);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-slate-200);
+  border: 1px solid var(--color-slate-200);}
+
+/* Only add margin-bottom in forms (edit view) */
+form .task-meta-grid {  margin-bottom: var(--spacing-xl);
 }
 
 .task-modal-meta-item {
@@ -145,8 +148,8 @@ turbo-frame#task_details {
 /* Task Modal Actions */
 .task-modal-actions {
   display: flex;
-  gap: var(--spacing-sm);
-  padding-top: var(--spacing-lg);
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-sm);
   margin-top: auto;
   border-top: 2px solid var(--color-slate-200);
 }
@@ -160,4 +163,76 @@ turbo-frame#task_details {
   background: var(--color-red-50) !important;
   color: var(--color-red-600) !important;
   border-color: var(--color-red-200) !important;
+}
+
+/* Task Form Styles */
+.task-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.task-form-field:last-of-type {
+  margin-bottom: 0;
+}
+
+.task-input,
+.task-textarea,
+.task-select {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--color-slate-700);
+  background: white;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.task-input:focus,
+.task-textarea:focus,
+.task-select:focus {
+  outline: none;
+  border-color: var(--color-blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.task-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.task-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-md) center;
+  padding-right: calc(var(--spacing-md) * 3);
+}
+
+.task-form-errors {
+  background: var(--color-red-50);
+  border: 1px solid var(--color-red-200);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  color: var(--color-red-600);
+}
+
+.task-form-errors strong {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+}
+
+.task-form-errors ul {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+}
+
+.task-form-errors li {
+  margin-bottom: var(--spacing-xs);
 }

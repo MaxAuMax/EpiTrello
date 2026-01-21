@@ -39,13 +39,17 @@ class TasksController < ApplicationController
     end
 
     def edit
+        render layout: false
     end
 
     def update
         if @task.update(task_params)
-            redirect_to project_task_path(@project, @task), notice: 'Task was successfully updated.'
+            respond_to do |format|
+                format.html { redirect_to project_path(@project), notice: 'Task was successfully updated.' }
+                format.turbo_stream { redirect_to project_path(@project), status: :see_other }
+            end
         else
-            render :edit
+            render :edit, layout: false
         end
     end
 

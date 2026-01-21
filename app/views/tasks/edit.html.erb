@@ -1,44 +1,66 @@
-<%= form_for([@project, @task]) do |f| %>
-    <% if @task.errors.any? %>
-        <div id="error_explanation">
-            <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
-            <ul>
-                <% @task.errors.full_messages.each do |message| %>
-                    <li><%= message %></li>
-                <% end %>
-            </ul>
+<turbo-frame id="task_details">
+  <div class="task-details-content">
+    <!-- Title Section -->
+    <div class="task-header-section">
+      <h2 class="task-title-main">Edit Task</h2>
+    </div>
+
+    <!-- Divider -->
+    <div class="task-divider"></div>
+
+    <%= form_with(model: [@project, @task], local: false) do |f| %>
+      <!-- Error Messages -->
+      <% if @task.errors.any? %>
+        <div class="task-form-errors">
+          <strong><%= pluralize(@task.errors.count, "error") %> prevented this task from being saved:</strong>
+          <ul>
+            <% @task.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
         </div>
+      <% end %>
+
+      <!-- Title Field -->
+      <div class="task-form-field">
+        <%= f.label :title, class: 'task-detail-label' %>
+        <%= f.text_field :title, class: 'task-input', placeholder: 'Enter task title' %>
+      </div>
+
+      <!-- Description Field -->
+      <div class="task-form-field">
+        <%= f.label :description, class: 'task-detail-label' %>
+        <%= f.text_area :description, class: 'task-textarea', rows: 4, placeholder: 'Enter task description' %>
+      </div>
+
+      <!-- Meta Information Grid -->
+      <div class="task-meta-grid">
+        <!-- Status Field -->
+        <div class="task-form-field">
+          <%= f.label :task_status_id, 'Status', class: 'task-detail-label' %>
+          <%= f.select :task_status_id, options_for_select(@status_options, @task.task_status_id), {}, { class: 'task-select' } %>
+        </div>
+
+        <!-- Due Date Field -->
+        <div class="task-form-field">
+          <%= f.label :due_date, 'Due Date', class: 'task-detail-label' %>
+          <%= f.date_field :due_date, class: 'task-input' %>
+        </div>
+      </div>
+
+      <!-- Assignee Field -->
+      <div class="task-form-field">
+        <%= f.label :assignee_id, 'Assigned to', class: 'task-detail-label' %>
+        <%= f.select :assignee_id, options_for_select(@project.users.map { |u| [u.username, u.id] }, @task.assignee_id), { include_blank: 'Not assigned' }, { class: 'task-select' } %>
+      </div>
+
+      <!-- Actions -->
+      <div class="task-modal-actions">
+        <%= link_to project_task_path(@project, @task), class: 'btn btn-secondary btn-sm', data: { action: 'click->modal#navigate' } do %>
+          Cancel
+        <% end %>
+        <%= f.submit 'Save Changes', class: 'btn btn-primary btn-sm' %>
+      </div>
     <% end %>
-
-    <div class="field">
-        <%= f.label :title %>
-        <%= f.text_field :title, id: :task_title %>
-    </div>
-
-    <div class="field">
-        <%= f.label :description %>
-        <%= f.text_area :description, id: :task_description %>
-    </div>
-
-    <div class="field">
-        <%= f.label :due_date %>
-        <%= f.date_field :due_date, id: :task_due_date %>
-    </div>
-
-    <div class="field">
-        <%= f.label :task_status %>
-        <%= f.select :task_status_id, options_for_select(@status_options, @task.task_status_id), {}, { class: 'custom-select', id: 'task_status' } %>
-    </div>
-
-    <div class="field">
-        <%= f.label :assignee %>
-        <%= f.select :assignee_id, options_for_select(@project.users.map { |u| [u.username, u.id] }, @task.assignee_id), { include_blank: 'Not assigned' }, { class: 'custom-select', id: 'task_assignee' } %>
-    </div>
-
-    <div class="actions" style="margin-bottom: 2rem;">
-        <%= f.submit %>
-    </div>
-
-<% end %>
-
-<%= link_to "Back to project", project_path(@task.project), class: 'btn-back' %>
+  </div>
+</turbo-frame>

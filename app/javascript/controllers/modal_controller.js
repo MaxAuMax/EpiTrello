@@ -16,20 +16,24 @@ export default class extends Controller {
   async open(event) {
     event.preventDefault()
     
+    // Open the modal first
+    this.modalTarget.classList.remove("hidden")
+    document.body.classList.add("overflow-hidden")
+    
     // Get the URL from the link
     const url = event.currentTarget.href
     
-    // Show loading state
+    // Load content
+    await this.loadContent(url)
+  }
+
+  async loadContent(url) {
     const frame = document.getElementById("task_details")
+    
     if (frame) {
       frame.innerHTML = '<div class="modal-loading"><div class="modal-spinner"></div></div>'
     }
     
-    // Open the modal
-    this.modalTarget.classList.remove("hidden")
-    document.body.classList.add("overflow-hidden")
-    
-    // Fetch and load the content
     try {
       const response = await fetch(url, {
         headers: {
@@ -52,6 +56,12 @@ export default class extends Controller {
         frame.innerHTML = '<div class="modal-error">Failed to load task details</div>'
       }
     }
+  }
+
+  navigate(event) {
+    event.preventDefault()
+    const url = event.currentTarget.href
+    this.loadContent(url)
   }
 
   close() {
