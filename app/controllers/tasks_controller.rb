@@ -2,7 +2,7 @@ class TasksController < ApplicationController
 
     before_action :authenticate_user!
     before_action :set_project, except: [:update_status]
-    before_action :set_task, only: [:show, :edit, :update, :destroy, :update_status]
+    before_action :set_task, only: [:show, :edit, :update, :destroy, :delete, :update_status]
     before_action :load_status_options, only: [:new, :edit, :create, :update]
 
     def index
@@ -53,9 +53,13 @@ class TasksController < ApplicationController
         end
     end
 
+    def delete
+        render layout: false
+    end
+
     def destroy
         @task.destroy
-        redirect_to project_tasks_path(@project), notice: 'Task was successfully deleted.'
+        redirect_to project_path(@project), notice: 'Task was successfully deleted.'
     end
 
     def update_status

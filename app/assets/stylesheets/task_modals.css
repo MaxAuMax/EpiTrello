@@ -236,3 +236,65 @@ form .task-meta-grid {  margin-bottom: var(--spacing-xl);
 .task-form-errors li {
   margin-bottom: var(--spacing-xs);
 }
+/* Delete Confirmation Styles */
+.task-delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+}
+
+.task-delete-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-red-50) 0%, var(--color-orange-50) 100%);
+  border-radius: var(--radius-full);
+  border: 3px solid var(--color-red-200);
+}
+
+.task-delete-icon svg {
+  color: var(--color-red-600);
+}
+
+.task-delete-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-red-600);
+  margin: 0;
+  text-align: center;
+}
+
+.task-delete-message {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-slate-700);
+  margin: 0;
+}
+
+.task-delete-message strong {
+  color: var(--color-slate-900);
+  font-weight: 700;
+}
+
+.task-delete-warning {
+  font-size: 0.9375rem;
+  color: var(--color-slate-500);
+  font-style: italic;
+  margin: 0;
+  margin-top: calc(var(--spacing-md) * -1);
+}
+
+.task-delete-confirm-btn {
+  color: var(--color-red-600) !important;
+}
+
+.task-delete-confirm-btn:hover {
+  background: var(--color-red-600) !important;
+  border-color: var(--color-red-600) !important;
+  color: white !important;
+}

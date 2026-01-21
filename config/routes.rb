@@ -17,7 +17,11 @@ Rails.application.routes.draw do
   get 'users/:id', to: 'users#show', as: 'user'
 
   resources :projects do
-    resources :tasks
+    resources :tasks do
+      member do
+        get :delete
+      end
+    end
   end
 
   # Task status update for drag & drop
