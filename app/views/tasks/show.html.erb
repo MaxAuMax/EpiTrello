@@ -28,59 +28,59 @@
     <!-- Meta Information Grid -->
     <div class="task-meta-grid">
       <!-- Due Date -->
-      <% if @task.due_date.present? %>
-        <div class="task-modal-meta-item">
-          <span class="task-detail-label">
-            <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            Due Date
-          </span>
-          <div class="task-meta-value">
-            <%= @task.due_date.strftime("%b %d, %Y") %>
-          </div>
+      <div class="task-modal-meta-item">
+        <span class="task-detail-label">
+          <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Due Date
+        </span>
+        <div class="task-meta-value <%= 'task-meta-empty' unless @task.due_date.present? %>">
+          <%= @task.due_date.present? ? @task.due_date.strftime("%b %d, %Y") : "Not set" %>
         </div>
-      <% end %>
+      </div>
 
       <!-- Assignee -->
-      <% if @task.assignee.present? %>
-        <div class="task-modal-meta-item">
-          <span class="task-detail-label">
-            <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            Assigned to
-          </span>
+      <div class="task-modal-meta-item">
+        <span class="task-detail-label">
+          <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Assigned to
+        </span>
+        <% if @task.assignee.present? %>
           <div class="task-assignee-compact">
             <div class="task-assignee-avatar-small">
               <%= @task.assignee.username.first.upcase %>
             </div>
             <span class="task-meta-value"><%= @task.assignee.username %></span>
           </div>
-        </div>
-      <% end %>
+        <% else %>
+          <div class="task-meta-value task-meta-empty">Not assigned</div>
+        <% end %>
+      </div>
     </div>
 
     <!-- Description -->
-    <% if @task.description.present? %>
-      <div class="task-description-section">
-        <span class="task-detail-label">
-          <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
-          Description
-        </span>
-        <p class="task-detail-text"><%= @task.description %></p>
-      </div>
-    <% end %>
+    <div class="task-description-section">
+      <span class="task-detail-label">
+        <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        Description
+      </span>
+      <p class="task-detail-text <%= 'task-meta-empty' unless @task.description.present? %>">
+        <%= @task.description.present? ? @task.description : "No description" %>
+      </p>
+    </div>
 
     <!-- Actions -->
     <div class="task-modal-actions">
