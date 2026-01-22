@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   # Task statuses (columns) management
   resources :task_statuses, only: [:new, :create, :edit, :update, :destroy] do
     member do
+      get :delete
       patch :move
     end
   end

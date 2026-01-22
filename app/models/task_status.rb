@@ -1,5 +1,5 @@
 class TaskStatus < ApplicationRecord
-  has_many :tasks, dependent: :restrict_with_error
+  has_many :tasks, dependent: :destroy
   
   COLORS = %w[gray red orange yellow green blue purple pink].freeze
   

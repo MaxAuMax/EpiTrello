@@ -1,9 +1,10 @@
 class TaskStatusesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task_status, only: [:edit, :update, :destroy, :move]
+  before_action :set_task_status, only: [:edit, :update, :delete, :destroy, :move]
 
   def new
     @task_status = TaskStatus.new
+    render partial: 'task_statuses/new_modal', locals: { task_status: @task_status }
   end
 
   def create
@@ -26,6 +27,10 @@ class TaskStatusesController < ApplicationController
     render partial: 'task_statuses/edit_modal', locals: { task_status: @task_status }
   end
 
+  def delete
+    render partial: 'task_statuses/delete_modal', locals: { task_status: @task_status }
+  end
+
   def update
     if @task_status.update(task_status_params)
       if params[:project_id].present?
@@ -39,10 +44,15 @@ class TaskStatusesController < ApplicationController
   end
 
   def destroy
-    if @task_status.tasks.any?
-      redirect_back fallback_location: root_path, alert: 'Cannot delete column with tasks.'
+    # Delete all tasks in this column first
+    @task_status.tasks.destroy_all
+    
+    # Then delete the column
+    @task_status.destroy
+    
+    if params[:project_id].present?
+      redirect_to project_path(params[:project_id]), notice: 'Column deleted successfully.'
     else
-      @task_status.destroy
       redirect_back fallback_location: root_path, notice: 'Column deleted successfully.'
     end
   end

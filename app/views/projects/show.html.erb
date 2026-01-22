@@ -118,9 +118,7 @@
                     Edit details
                   <% end %>
                   
-                  <%= button_to task_status_path(status), method: :delete, 
-                      class: 'column-menu-item column-menu-item-danger',
-                      data: { turbo_confirm: 'Delete this column? Tasks in this column must be moved first.' } do %>
+                  <%= link_to delete_task_status_path(status, project_id: @project.id), class: 'column-menu-item column-menu-item-danger', data: { action: 'click->modal#open' } do %>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <polyline points="3 6 5 6 21 6"></polyline>
                       <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -270,7 +268,7 @@
       
       <!-- Add Column Button -->
       <div class="add-column-container">
-        <%= link_to new_task_status_path(project_id: @project.id), class: 'add-column-button' do %>
+        <%= link_to new_task_status_path(project_id: @project.id), class: 'add-column-button', data: { action: 'click->modal#open' } do %>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -286,6 +284,8 @@
   <%= render "shared/modal" do %>
     <turbo-frame id="task_details"></turbo-frame>
     <turbo-frame id="column_edit_details"></turbo-frame>
+    <turbo-frame id="column_new"></turbo-frame>
+    <turbo-frame id="column_delete"></turbo-frame>
   <% end %>
 </div>
 

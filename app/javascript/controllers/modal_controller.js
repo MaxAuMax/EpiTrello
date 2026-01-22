@@ -29,14 +29,28 @@ export default class extends Controller {
 
   async loadContent(url) {
     // Determine which frame to use based on URL
-    const isColumnEdit = url.includes('/task_statuses/') && url.includes('/edit')
-    const frameId = isColumnEdit ? 'column_edit_details' : 'task_details'
+    let frameId = 'task_details' // default
+    
+    if (url.includes('/task_statuses/')) {
+      if (url.includes('/edit')) {
+        frameId = 'column_edit_details'
+      } else if (url.includes('/delete')) {
+        frameId = 'column_delete'
+      } else if (url.includes('/new')) {
+        frameId = 'column_new'
+      }
+    }
+    
     const frame = document.getElementById(frameId)
     
-    // Clear the other frame
-    const otherFrameId = isColumnEdit ? 'task_details' : 'column_edit_details'
-    const otherFrame = document.getElementById(otherFrameId)
-    if (otherFrame) otherFrame.innerHTML = ""
+    // Clear all other frames
+    const allFrameIds = ['task_details', 'column_edit_details', 'column_new', 'column_delete']
+    allFrameIds.forEach(id => {
+      if (id !== frameId) {
+        const otherFrame = document.getElementById(id)
+        if (otherFrame) otherFrame.innerHTML = ""
+      }
+    })
     
     if (frame) {
       frame.innerHTML = '<div class="modal-loading"><div class="modal-spinner"></div></div>'
@@ -76,11 +90,12 @@ export default class extends Controller {
     this.modalTarget.classList.add("hidden")
     document.body.classList.remove("overflow-hidden")
 
-    // Clear both frames
-    const taskFrame = document.getElementById("task_details")
-    const columnFrame = document.getElementById("column_edit_details")
-    if (taskFrame) taskFrame.innerHTML = ""
-    if (columnFrame) columnFrame.innerHTML = ""
+    // Clear all frames
+    const allFrameIds = ['task_details', 'column_edit_details', 'column_new', 'column_delete']
+    allFrameIds.forEach(id => {
+      const frame = document.getElementById(id)
+      if (frame) frame.innerHTML = ""
+    })
   }
 
   handleEscape(event) {
