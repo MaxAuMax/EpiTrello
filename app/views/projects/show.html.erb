@@ -84,7 +84,7 @@
               <span class="column-count"><%= status_tasks.count %></span>
               
               <!-- Column Menu -->
-              <div class="column-menu" data-controller="column-menu">
+              <div class="column-menu" data-controller="column-menu" data-column-menu-status-id-value="<%= status.id %>" data-column-menu-current-position-value="<%= status.position %>">
                 <button type="button" class="column-menu-button" data-action="click->column-menu#toggle">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="1"></circle>
@@ -93,7 +93,30 @@
                   </svg>
                 </button>
                 
+                <!-- Main Menu -->
                 <div class="column-menu-dropdown hidden" data-column-menu-target="menu">
+                  <div class="column-menu-header">
+                    Column actions
+                    <button type="button" class="column-menu-close" data-action="click->column-menu#hideAll">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <button type="button" class="column-menu-item" data-action="click->column-menu#showMoveMenu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="5 9 2 12 5 15"></polyline>
+                      <polyline points="9 5 12 2 15 5"></polyline>
+                      <polyline points="15 19 12 22 9 19"></polyline>
+                      <polyline points="19 9 22 12 19 15"></polyline>
+                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                      <line x1="12" y1="2" x2="12" y2="22"></line>
+                    </svg>
+                    Move list
+                  </button>
+                  
                   <%= link_to edit_task_status_path(status), class: 'column-menu-item', data: { turbo: false } do %>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -101,6 +124,7 @@
                     </svg>
                     Rename
                   <% end %>
+                  
                   <%= button_to task_status_path(status), method: :delete, 
                       class: 'column-menu-item column-menu-item-danger',
                       data: { turbo_confirm: 'Delete this column? Tasks in this column must be moved first.' } do %>
@@ -110,6 +134,38 @@
                     </svg>
                     Delete
                   <% end %>
+                </div>
+                
+                <!-- Move Submenu -->
+                <div class="column-menu-dropdown hidden" data-column-menu-target="moveMenu">
+                  <div class="column-menu-header">
+                    <button type="button" class="column-menu-back" data-action="click->column-menu#showMainMenu">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                      </svg>
+                    </button>
+                    Move list
+                    <button type="button" class="column-menu-close" data-action="click->column-menu#hideAll">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div class="column-move-content">
+                    <label class="column-move-label">Position</label>
+                    <select class="column-move-select" data-column-menu-target="positionSelect">
+                      <% TaskStatus.all.each do |s| %>
+                        <option value="<%= s.position %>" <%= 'selected' if s.id == status.id %>><%= s.position %></option>
+                      <% end %>
+                    </select>
+                    <p class="column-current-position">Current position: <%= status.position %></p>
+                    <button type="button" class="column-move-button" data-action="click->column-menu#moveColumn">
+                      Move
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -601,7 +657,7 @@
   border: 1px solid var(--color-slate-200);
   border-radius: var(--radius-md);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 160px;
+  min-width: 200px;
   z-index: 100;
   overflow: hidden;
 }
@@ -610,12 +666,71 @@
   display: none;
 }
 
+.column-menu-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-slate-500);
+  background: var(--color-slate-50);
+  border-bottom: 1px solid var(--color-slate-200);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  justify-content: space-between;
+}
+
+.column-menu-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-slate-600);
+  transition: all var(--transition-fast);
+  margin-left: calc(var(--spacing-xs) * -1);
+}
+
+.column-menu-back:hover {
+  color: var(--color-slate-900);
+}
+
+.column-menu-back svg {
+  width: 14px;
+  height: 14px;
+}
+
+.column-menu-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-slate-600);
+  transition: all var(--transition-fast);
+  margin-right: calc(var(--spacing-xs) * -1);
+}
+
+.column-menu-close:hover {
+  color: var(--color-slate-900);
+}
+
+.column-menu-close svg {
+  width: 14px;
+  height: 14px;
+}
+
 .column-menu-item {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   color: var(--color-slate-700);
   text-decoration: none;
   border: none;
@@ -644,6 +759,62 @@
 .column-menu-item-danger:hover {
   background: var(--color-red-50);
   color: var(--color-red-700);
+}
+
+/* Column Move Submenu */
+.column-move-content {
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.column-current-position {
+  font-size: 0.75rem;
+  color: var(--color-slate-500);
+  margin: 0;
+}
+
+.column-move-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-slate-700);
+  margin: 0;
+}
+
+.column-move-select {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--color-slate-700);
+  background: white;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.column-move-select:focus {
+  outline: none;
+  border-color: var(--color-blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.column-move-button {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-blue-600);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.column-move-button:hover {
+  background: var(--color-blue-700);
 }
 
 /* Add Column Container */

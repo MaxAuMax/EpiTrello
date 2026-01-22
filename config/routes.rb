@@ -28,5 +28,9 @@ Rails.application.routes.draw do
   patch 'tasks/:id/update_status', to: 'tasks#update_status', as: 'update_task_status'
   
   # Task statuses (columns) management
-  resources :task_statuses, only: [:new, :create, :edit, :update, :destroy]
+  resources :task_statuses, only: [:new, :create, :edit, :update, :destroy] do
+    member do
+      patch :move
+    end
+  end
 end
