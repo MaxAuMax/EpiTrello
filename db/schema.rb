@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_09_184648) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_22_173345) do
   create_table "project_statuses", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -41,6 +41,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_09_184648) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position", default: 0
+    t.index ["position"], name: "index_task_statuses_on_position"
   end
 
   create_table "tasks", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|

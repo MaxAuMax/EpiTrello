@@ -26,4 +26,7 @@ Rails.application.routes.draw do
 
   # Task status update for drag & drop
   patch 'tasks/:id/update_status', to: 'tasks#update_status', as: 'update_task_status'
+  
+  # Task statuses (columns) management
+  resources :task_statuses, only: [:new, :create, :edit, :update, :destroy]
 end
