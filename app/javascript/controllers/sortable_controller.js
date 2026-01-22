@@ -28,9 +28,14 @@ export default class extends Controller {
   }
 
   handleRemove(event) {
-    // Check if source column is now empty and show empty state immediately
-    const remainingCards = event.from.querySelectorAll('.task-card').length
+    // Check if source column will be empty after this drag completes
+    // We check before the DOM updates by looking at visible task cards
+    const remainingCards = Array.from(event.from.querySelectorAll('.task-card')).filter(
+      card => card !== event.item && card.style.display !== 'none'
+    ).length
+    
     if (remainingCards === 0) {
+      // Show empty state immediately
       this.showEmptyState(event.from)
     }
   }
@@ -117,8 +122,22 @@ export default class extends Controller {
   }
 
   showEmptyState(container) {
-    const emptyState = container.querySelector('.column-empty-state')
-    if (emptyState) {
+    let emptyState = container.querySelector('.column-empty-state')
+    
+    // If empty state doesn't exist, create it
+    if (!emptyState) {
+      emptyState = document.createElement('div')
+      emptyState.className = 'column-empty-state'
+      emptyState.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>No tasks yet</p>
+      `
+      container.appendChild(emptyState)
+    } else {
       emptyState.style.display = 'flex'
     }
   }

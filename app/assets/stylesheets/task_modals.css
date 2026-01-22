@@ -364,8 +364,8 @@ form .task-meta-grid {
 }
 
 .task-delete-icon {
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,6 +375,8 @@ form .task-meta-grid {
 }
 
 .task-delete-icon svg {
+  width: 52px;
+  height: 52px;
   color: var(--color-red-600);
 }
 

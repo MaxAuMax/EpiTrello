@@ -20,8 +20,12 @@
       </div>
 
       <div class="nav-actions">
-        <%= link_to "Log in", new_user_session_path, class: "btn-link" %>
-        <%= link_to "Sign up", new_user_registration_path, class: "btn btn-primary btn-sm" %>
+        <% if user_signed_in? %>
+          <%= link_to "Dashboard", user_path(current_user), class: "btn btn-primary btn-sm" %>
+        <% else %>
+          <%= link_to "Log in", new_user_session_path, class: "btn-link" %>
+          <%= link_to "Sign up", new_user_registration_path, class: "btn btn-primary btn-sm" %>
+        <% end %>
       </div>
     </div>
   </nav>
