@@ -72,14 +72,7 @@
           <!-- Column Header -->
           <div class="board-column-header">
             <div class="column-header-main">
-              <div class="column-dot" style="background: <%= case status.name
-                when 'Backlog' then 'var(--color-slate-400)'
-                when 'To Do' then 'var(--color-blue-500)'
-                when 'In Progress' then 'var(--color-orange-600)'
-                when 'Completed' then 'var(--color-green-600)'
-                when 'On Hold' then 'var(--color-red-600)'
-                else 'var(--color-slate-400)'
-              end %>;"></div>
+              <div class="column-dot" style="background: <%= column_color(status.color) %>;"></div>
               <h3 class="column-title"><%= status.name %></h3>
               <span class="column-count"><%= status_tasks.count %></span>
               
@@ -117,12 +110,12 @@
                     Move list
                   </button>
                   
-                  <%= link_to edit_task_status_path(status), class: 'column-menu-item', data: { turbo: false } do %>
+                  <%= link_to edit_task_status_path(status, project_id: @project.id), class: 'column-menu-item', data: { turbo: false } do %>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
-                    Rename
+                    Edit details
                   <% end %>
                   
                   <%= button_to task_status_path(status), method: :delete, 
@@ -277,7 +270,7 @@
       
       <!-- Add Column Button -->
       <div class="add-column-container">
-        <%= link_to new_task_status_path, class: 'add-column-button' do %>
+        <%= link_to new_task_status_path(project_id: @project.id), class: 'add-column-button' do %>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>

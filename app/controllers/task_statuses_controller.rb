@@ -12,7 +12,11 @@ class TaskStatusesController < ApplicationController
     @task_status.position = max_position + 1
 
     if @task_status.save
-      redirect_back fallback_location: root_path, notice: 'Column created successfully.'
+      if params[:project_id].present?
+        redirect_to project_path(params[:project_id]), notice: 'Column created successfully.'
+      else
+        redirect_back fallback_location: root_path, notice: 'Column created successfully.'
+      end
     else
       render :new, status: :unprocessable_entity
     end
@@ -23,7 +27,11 @@ class TaskStatusesController < ApplicationController
 
   def update
     if @task_status.update(task_status_params)
-      redirect_back fallback_location: root_path, notice: 'Column updated successfully.'
+      if params[:project_id].present?
+        redirect_to project_path(params[:project_id]), notice: 'Column updated successfully.'
+      else
+        redirect_back fallback_location: root_path, notice: 'Column updated successfully.'
+      end
     else
       render :edit, status: :unprocessable_entity
     end
@@ -69,6 +77,6 @@ class TaskStatusesController < ApplicationController
   end
 
   def task_status_params
-    params.require(:task_status).permit(:name, :description, :position)
+    params.require(:task_status).permit(:name, :description, :position, :color)
   end
 end

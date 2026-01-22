@@ -339,6 +339,10 @@ body {
   margin-bottom: var(--spacing-lg);
 }
 
+.auth-container .form-group-full {
+  grid-column: 1 / -1;
+}
+
 .auth-container label {
   display: block;
   font-size: 0.875rem;
@@ -349,7 +353,8 @@ body {
 
 .auth-container input[type="email"],
 .auth-container input[type="password"],
-.auth-container input[type="text"] {
+.auth-container input[type="text"],
+.auth-container textarea {
   width: 100%;
   padding: 0.75rem var(--spacing-md);
   border: 1px solid var(--color-slate-200);
@@ -364,16 +369,90 @@ body {
 
 .auth-container input[type="email"]:focus,
 .auth-container input[type="password"]:focus,
-.auth-container input[type="text"]:focus {
+.auth-container input[type="text"]:focus,
+.auth-container textarea:focus {
   outline: none;
   border-color: var(--color-slate-900);
   background: white;
   box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
 }
 
-.auth-container input::placeholder {
+.auth-container input::placeholder,
+.auth-container textarea::placeholder {
   color: var(--color-slate-400);
 }
+
+.auth-container textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+/* Color Picker */
+.color-picker {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.color-option {
+  cursor: pointer;
+  position: relative;
+}
+
+.color-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.color-checkbox {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+  position: relative;
+  cursor: pointer;
+}
+
+.color-checkbox svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  stroke: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.color-radio:checked + .color-checkbox svg {
+  opacity: 1;
+}
+
+.color-checkbox:hover {
+  transform: scale(1.1);
+  border-color: var(--color-slate-300);
+}
+
+.color-radio:checked + .color-checkbox {
+  border-color: var(--color-slate-400);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Color variants */
+.color-gray { background-color: var(--color-slate-400); }
+.color-red { background-color: var(--color-red-500); }
+.color-orange { background-color: var(--color-orange-500); }
+.color-yellow { background-color: #eab308; }
+.color-green { background-color: var(--color-green-500); }
+.color-blue { background-color: var(--color-blue-500); }
+.color-purple { background-color: var(--color-purple-500); }
+.color-pink { background-color: #ec4899; }
 
 /* Buttons */
 .auth-container .button {
