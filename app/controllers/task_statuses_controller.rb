@@ -23,6 +23,7 @@ class TaskStatusesController < ApplicationController
   end
 
   def edit
+    render partial: 'task_statuses/edit_modal', locals: { task_status: @task_status }
   end
 
   def update
@@ -30,7 +31,7 @@ class TaskStatusesController < ApplicationController
       if params[:project_id].present?
         redirect_to project_path(params[:project_id]), notice: 'Column updated successfully.'
       else
-        redirect_back fallback_location: root_path, notice: 'Column updated successfully.'
+        redirect_to request.referer || root_path, notice: 'Column updated successfully.'
       end
     else
       render :edit, status: :unprocessable_entity
