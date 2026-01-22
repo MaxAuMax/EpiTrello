@@ -32,7 +32,7 @@
       <% end %>
       <%= button_to project_task_path(@project, @task), 
           method: :delete,
-          class: 'btn btn-secondary btn-sm task-delete-confirm-btn',
+          class: 'task-delete-confirm-btn',
           form: { data: { turbo: false } } do %>
         <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="3 6 5 6 21 6"></polyline>

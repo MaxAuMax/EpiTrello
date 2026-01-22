@@ -16,7 +16,121 @@
    is dynamically loaded.
    ======================================================================== */
 
-/* Task Details Turbo Frame */
+/* Modal Wrapper & Backdrop */
+.task-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: none;
+}
+
+.task-modal-wrapper:not(.hidden) {
+  display: block;
+}
+
+.task-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+}
+
+.task-modal-content {
+  background: white;
+  border-radius: var(--radius-xl);
+  width: 850px;
+  max-width: 110vw;
+  height: auto;
+  max-height: 100vh;
+  margin: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: modalSlideIn 0.2s ease-out;
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close-button-absolute {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--color-slate-100);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  color: var(--color-slate-600);
+  z-index: 10;
+}
+
+.modal-close-button-absolute:hover {
+  background: var(--color-slate-200);
+}
+
+.modal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  min-height: 200px;
+}
+
+.modal-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-slate-200);
+  border-top-color: var(--color-blue-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.modal-error {
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--color-red-600);
+}
+
+turbo-frame#task_details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Task Details Turbo Frame Content */
 turbo-frame#task_details {
   display: flex !important;
   flex-direction: column;
@@ -61,10 +175,12 @@ turbo-frame#task_details {
   background: var(--color-slate-50);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-slate-200);}
+  border: 1px solid var(--color-slate-200);
+}
 
 /* Only add margin-bottom in forms (edit view) */
-form .task-meta-grid {  margin-bottom: var(--spacing-xl);
+form .task-meta-grid {
+  margin-bottom: var(--spacing-xl);
 }
 
 .task-modal-meta-item {
@@ -149,7 +265,7 @@ form .task-meta-grid {  margin-bottom: var(--spacing-xl);
 .task-modal-actions {
   display: flex;
   gap: var(--spacing-md);
-  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-sm);
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-md);
   margin-top: auto;
   border-top: 2px solid var(--color-slate-200);
 }
@@ -236,6 +352,7 @@ form .task-meta-grid {  margin-bottom: var(--spacing-xl);
 .task-form-errors li {
   margin-bottom: var(--spacing-xs);
 }
+
 /* Delete Confirmation Styles */
 .task-delete-confirmation {
   display: flex;
@@ -290,11 +407,25 @@ form .task-meta-grid {  margin-bottom: var(--spacing-xl);
 }
 
 .task-delete-confirm-btn {
-  color: var(--color-red-600) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  color: var(--color-red-600);
+  border: 2px solid var(--color-red-600);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex: 1;
+  text-decoration: none;
 }
 
 .task-delete-confirm-btn:hover {
-  background: var(--color-red-600) !important;
-  border-color: var(--color-red-600) !important;
-  color: white !important;
+  background: var(--color-red-600);
+  color: white;
+  transform: scale(1.05);
 }
