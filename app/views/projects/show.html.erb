@@ -342,6 +342,13 @@
 </div>
 
 <style>
+/* Prevent page-level vertical scrolling */
+body {
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+}
+
 /* Board Header */
 .board-header {
   background: white;
@@ -1218,12 +1225,20 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .board-header {
-    padding: var(--spacing-sm) var(--spacing-md);
+  .board-header-container {
+    padding: var(--spacing-md) var(--spacing-md);
   }
 
   .board-title {
     font-size: 1.25rem;
+  }
+
+  .board-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .board-header-actions {
@@ -1232,8 +1247,11 @@
   }
 
   .board-container {
+    height: calc(100vh - 180px);
+  }
+
+  .board-scroll-area {
     padding: var(--spacing-md);
-    height: calc(100vh - 160px);
   }
 }
 </style>
