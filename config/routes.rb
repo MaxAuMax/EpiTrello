@@ -17,6 +17,22 @@ Rails.application.routes.draw do
   get 'users/:id', to: 'users#show', as: 'user'
 
   resources :projects do
-    resources :tasks
+    resources :tasks do
+      member do
+        get :delete
+      end
+    end
+  end
+
+  # Task status update for drag & drop
+  patch 'tasks/:id/update_status', to: 'tasks#update_status', as: 'update_task_status'
+  
+  # Task statuses (columns) management
+  resources :task_statuses, only: [:new, :create, :edit, :update, :destroy] do
+    member do
+      get :delete
+      patch :move
+      patch :move_all_cards
+    end
   end
 end

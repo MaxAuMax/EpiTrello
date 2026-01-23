@@ -26,6 +26,10 @@ ProjectStatus.find_or_create_by(name: 'On Hold') do |status|
 end
 
 # Créer les statuts de tâche par défaut
+TaskStatus.find_or_create_by(name: 'Backlog') do |status|
+  status.description = 'Tasks in the backlog.'
+end
+
 TaskStatus.find_or_create_by(name: 'To Do') do |status|
   status.description = 'The task is yet to be started.'
 end

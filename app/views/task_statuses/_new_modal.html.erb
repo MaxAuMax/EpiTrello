@@ -1,0 +1,54 @@
+<turbo-frame id="column_new">
+  <div class="modal-task-details">
+    <div class="task-details-header">
+      <h2>New Column</h2>
+    </div>
+
+    <%= form_with(model: task_status, url: task_statuses_path, data: { turbo: false }) do |f| %>
+      <%= hidden_field_tag :project_id, params[:project_id] if params[:project_id].present? %>
+      
+      <% if task_status.errors.any? %>
+        <div class="error-messages">
+          <h3><%= pluralize(task_status.errors.count, "error") %> prevented this column from being saved:</h3>
+          <ul>
+            <% task_status.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="task-details-content">
+        <div class="task-form-group">
+          <%= f.label :name, "Column Name" %>
+          <%= f.text_field :name, class: 'task-form-input', placeholder: 'e.g., In Progress', autofocus: true, required: true %>
+        </div>
+
+        <div class="task-form-group">
+          <%= f.label :description, "Description (optional)" %>
+          <%= f.text_area :description, rows: 3, class: 'task-form-textarea', placeholder: 'Describe this column...' %>
+        </div>
+
+        <div class="task-form-group">
+          <%= f.label :color, "Color" %>
+          <div class="color-picker">
+            <% TaskStatus::COLORS.each do |color| %>
+              <label class="color-option">
+                <%= f.radio_button :color, color, class: 'color-radio', checked: color == 'gray' %>
+                <span class="color-checkbox color-<%= color %>" data-color="<%= color %>">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <%= f.submit "Create Column", class: "modal-button-primary" %>
+      </div>
+    <% end %>
+  </div>
+</turbo-frame>

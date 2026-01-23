@@ -10,17 +10,3 @@
         <%= link_to "Destroy", project_task_path(task.project, task), data: { "turbo-method": :delete , turbo_confirm: 'Are you sure to delete task ?' } %>
     </div>
 <% end %>
-
-<style>
-
-    .task-card {
-        border: 1px solid #c9c9c9;
-        border-radius: 5px;
-        padding: 10px;
-        margin: 10px;
-        width: fit-content;
-        height: fit-content;
-        box-shadow: 0 0 10px #c9c9c9;
-    }
-
-</style>

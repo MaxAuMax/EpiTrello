@@ -1,0 +1,44 @@
+<turbo-frame id="column_delete">
+  <div class="task-delete-confirmation">
+    <div class="task-delete-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+      </svg>
+    </div>
+
+    <h2 class="task-delete-title">Delete Column?</h2>
+    
+    <p class="task-delete-message">
+      Are you sure you want to delete the column <strong><%= task_status.name %></strong>?
+    </p>
+
+    <% if task_status.tasks.any? %>
+      <p class="task-delete-warning" style="color: var(--color-red-600); font-weight: 600;">
+        This column contains <%= pluralize(task_status.tasks.count, 'task') %>. Deleting this column will also delete all tasks in it.
+      </p>
+    <% else %>
+      <p class="task-delete-warning">
+        This action cannot be undone.
+      </p>
+    <% end %>
+
+    <div class="task-modal-actions">
+      <button type="button" class="btn btn-secondary" data-action="click->modal#close">
+        Cancel
+      </button>
+      <%= button_to task_status_path(task_status, project_id: params[:project_id]), 
+          method: :delete,
+          class: 'task-delete-confirm-btn',
+          data: { turbo: false } do %>
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        <%= task_status.tasks.any? ? 'Delete Anyway' : 'Delete Column' %>
+      <% end %>
+    </div>
+  </div>
+</turbo-frame>

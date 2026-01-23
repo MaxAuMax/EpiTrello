@@ -1,0 +1,106 @@
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["modal"]
+
+  connect() {
+    // Listen for escape key
+    this.escapeHandler = this.handleEscape.bind(this)
+    document.addEventListener("keydown", this.escapeHandler)
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this.escapeHandler)
+  }
+
+  async open(event) {
+    event.preventDefault()
+    
+    // Open the modal first
+    this.modalTarget.classList.remove("hidden")
+    document.body.classList.add("overflow-hidden")
+    
+    // Get the URL from the link
+    const url = event.currentTarget.href
+    
+    // Load content
+    await this.loadContent(url)
+  }
+
+  async loadContent(url) {
+    // Determine which frame to use based on URL
+    let frameId = 'task_details' // default
+    
+    if (url.includes('/task_statuses/')) {
+      if (url.includes('/edit')) {
+        frameId = 'column_edit_details'
+      } else if (url.includes('/delete')) {
+        frameId = 'column_delete'
+      } else if (url.includes('/new')) {
+        frameId = 'column_new'
+      }
+    }
+    
+    const frame = document.getElementById(frameId)
+    
+    // Clear all other frames
+    const allFrameIds = ['task_details', 'column_edit_details', 'column_new', 'column_delete']
+    allFrameIds.forEach(id => {
+      if (id !== frameId) {
+        const otherFrame = document.getElementById(id)
+        if (otherFrame) otherFrame.innerHTML = ""
+      }
+    })
+    
+    if (frame) {
+      frame.innerHTML = '<div class="modal-loading"><div class="modal-spinner"></div></div>'
+    }
+    
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'text/html'
+        }
+      })
+      const html = await response.text()
+      
+      // Find the turbo-frame in the response
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(html, 'text/html')
+      const frameContent = doc.querySelector(`#${frameId}`)
+      
+      if (frameContent && frame) {
+        frame.innerHTML = frameContent.innerHTML
+      }
+    } catch (error) {
+      console.error('Error loading modal content:', error)
+      if (frame) {
+        frame.innerHTML = '<div class="modal-error">Failed to load content</div>'
+      }
+    }
+  }
+
+  navigate(event) {
+    event.preventDefault()
+    const url = event.currentTarget.href
+    this.loadContent(url)
+  }
+
+  close() {
+    this.modalTarget.classList.add("hidden")
+    document.body.classList.remove("overflow-hidden")
+
+    // Clear all frames
+    const allFrameIds = ['task_details', 'column_edit_details', 'column_new', 'column_delete']
+    allFrameIds.forEach(id => {
+      const frame = document.getElementById(id)
+      if (frame) frame.innerHTML = ""
+    })
+  }
+
+  handleEscape(event) {
+    if (event.key === "Escape" && !this.modalTarget.classList.contains("hidden")) {
+      this.close()
+    }
+  }
+}

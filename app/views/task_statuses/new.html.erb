@@ -1,0 +1,56 @@
+<div class="auth-page">
+  <%= link_to :back, class: "auth-back-button" do %>
+    <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Back
+  <% end %>
+
+  <div class="auth-container">
+    <h1>New Column</h1>
+    <p class="subtitle">Create a new status column for your board</p>
+
+    <%= form_with(model: @task_status, url: task_statuses_path) do |f| %>
+      <%= hidden_field_tag :project_id, params[:project_id] if params[:project_id].present? %>
+      <% if @task_status.errors.any? %>
+        <div class="error-messages">
+          <h2><%= pluralize(@task_status.errors.count, "error") %> prevented this column from being saved:</h2>
+          <ul>
+            <% @task_status.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.label :name, "Column Name" %>
+        <%= f.text_field :name, class: '', placeholder: 'e.g., In Progress', autofocus: true %>
+      </div>
+
+      <div class="form-group form-group-full">
+        <%= f.label :description, "Description (optional)" %>
+        <%= f.text_area :description, rows: 3, class: '', placeholder: 'Describe this column...' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :color, "Color" %>
+        <div class="color-picker">
+          <% TaskStatus::COLORS.each do |color| %>
+            <label class="color-option">
+              <%= f.radio_button :color, color, class: 'color-radio' %>
+              <span class="color-checkbox color-<%= color %>" data-color="<%= color %>">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <%= f.submit "Create Column", class: "button" %>
+    <% end %>
+  </div>
+</div>

@@ -38,6 +38,7 @@ class ProjectsController < ApplicationController
         if @project.save
             redirect_to user_path(current_user)
         else
+            @status_options = status_options
             render 'new'
         end
     end
