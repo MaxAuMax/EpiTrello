@@ -1,58 +1,1257 @@
-<%= link_to 'Add task', new_project_task_path(@project), class: 'btn-add' %>
-<%= link_to 'Back to projects', root_path, class: 'btn-back' %>
-
-<h1><%= @project.name %></h1>
-
-<p><%= @project.description %></p>
-
-<p>State of project : <%= @project_status rescue "No status found" %></p>
-
-<p>Number of participants : <%= @project.users.count == 1 ? "Only you" : @project.users.count %></p>
-
-
-
-<% if @project_tasks.blank? %>
-    <h2>Aucune tâche pour le moment</h2>
-<% else %>
-    <h2>Tâches</h2>
-    <div class="task-carousel">
-        <% @project_tasks.each do |task| %>
-            <div class="task-card">
-                <h2><%= task.title %></h2>
-                <p>Description: <%= task.description %></p>
-                <p>Status: <%= task.task_status&.name %></p>
-                <p>Due date: <%= task.due_date&.strftime("%d/%m/%Y") || "Not set" %></p>
-                <p>Assigned to: <%= task.assignee&.username || "Not assigned" %></p>
-                <%= link_to "Show", project_task_path(task.project, task) %>
-                <%= link_to "Edit", edit_project_task_path(task.project, task) %>
-                <%= link_to "Destroy", project_task_path(task.project, task), data: { "turbo-method": :delete , turbo_confirm: 'Are you sure to delete task ?' } %>
-            </div>
-        <% end %>
+<!-- Board Header -->
+<div class="board-header">
+  <div class="board-header-container">
+    <div class="board-header-main">
+      <div class="board-title-section">
+        <h1 class="board-title"><%= @project.name %></h1>
+        <span class="board-status-badge">
+          <%= @project_status || "No status" %>
+        </span>
+      </div>
+      <p class="board-description"><%= @project.description %></p>
     </div>
-<% end %>
 
-<div style="width: 20%; heigth: 20%">
-    <canvas id="myChart"></canvas>
+    <div class="board-header-actions">
+      <div class="board-meta">
+        <span class="board-meta-item">
+          <svg style="width: 18px; height: 18px; color: var(--color-slate-400);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <%= @project.users.count == 1 ? "Only you" : "#{@project.users.count} members" %>
+        </span>
+      </div>
+      <div class="board-actions-group">
+        <%= link_to edit_project_path(@project), class: 'btn-secondary' do %>
+          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Edit Project
+        <% end %>
+        <%= link_to user_path(current_user), class: 'btn-primary' do %>
+          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          All Projects
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Board Container -->
+<div class="board-container" data-controller="modal">
+  <div class="board-scroll-area">
+    <% if TaskStatus.none? %>
+      <!-- Empty State - No statuses configured -->
+      <div class="board-empty-state">
+        <div class="empty-state-content">
+          <div class="empty-state-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <h3 class="empty-state-title">No statuses configured</h3>
+          <p class="empty-state-description">Please configure task statuses to use the board</p>
+        </div>
+      </div>
+    <% else %>
+
+    <!-- Board Columns -->
+    <div class="board-columns">
+      <% TaskStatus.all.each do |status| %>
+        <% status_tasks = @project_tasks.where(task_status: status) %>
+        <div class="board-column">
+          <!-- Column Header -->
+          <div class="board-column-header">
+            <div class="column-header-main">
+              <div class="column-dot" style="background: <%= column_color(status.color) %>;"></div>
+              <h3 class="column-title"><%= status.name %></h3>
+              <span class="column-count"><%= status_tasks.count %></span>
+              
+              <!-- Column Menu -->
+              <div class="column-menu" data-controller="column-menu" data-column-menu-status-id-value="<%= status.id %>" data-column-menu-current-position-value="<%= status.position %>">
+                <button type="button" class="column-menu-button" data-action="click->column-menu#toggle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                  </svg>
+                </button>
+                
+                <!-- Main Menu -->
+                <div class="column-menu-dropdown hidden" data-column-menu-target="menu">
+                  <div class="column-menu-header">
+                    Column actions
+                    <button type="button" class="column-menu-close" data-action="click->column-menu#hideAll">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <button type="button" class="column-menu-item" data-action="click->column-menu#showMoveMenu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="5 9 2 12 5 15"></polyline>
+                      <polyline points="9 5 12 2 15 5"></polyline>
+                      <polyline points="15 19 12 22 9 19"></polyline>
+                      <polyline points="19 9 22 12 19 15"></polyline>
+                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                      <line x1="12" y1="2" x2="12" y2="22"></line>
+                    </svg>
+                    Move list
+                  </button>
+                  
+                  <button type="button" class="column-menu-item column-menu-item-disabled" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="4" y1="6" x2="20" y2="6"></line>
+                      <line x1="4" y1="12" x2="20" y2="12"></line>
+                      <line x1="4" y1="18" x2="20" y2="18"></line>
+                      <circle cx="20" cy="6" r="1"></circle>
+                      <circle cx="20" cy="12" r="1"></circle>
+                      <circle cx="20" cy="18" r="1"></circle>
+                    </svg>
+                    Sort by
+                  </button>
+                  
+                  <button type="button" class="column-menu-item" data-action="click->column-menu#showMoveCardsMenu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Move all cards in this list
+                  </button>
+                  
+                  <%= link_to edit_task_status_path(status, project_id: @project.id), class: 'column-menu-item', data: { action: 'click->modal#open' } do %>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Edit details
+                  <% end %>
+                  
+                  <%= link_to delete_task_status_path(status, project_id: @project.id), class: 'column-menu-item column-menu-item-danger', data: { action: 'click->modal#open' } do %>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Delete
+                  <% end %>
+                </div>
+                
+                <!-- Move Submenu -->
+                <div class="column-menu-dropdown hidden" data-column-menu-target="moveMenu">
+                  <div class="column-menu-header">
+                    <button type="button" class="column-menu-back" data-action="click->column-menu#showMainMenu">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                      </svg>
+                    </button>
+                    Move list
+                    <button type="button" class="column-menu-close" data-action="click->column-menu#hideAll">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div class="column-move-content">
+                    <label class="column-move-label">Position</label>
+                    <select class="column-move-select" data-column-menu-target="positionSelect">
+                      <% TaskStatus.all.each do |s| %>
+                        <option value="<%= s.position %>" <%= 'selected' if s.id == status.id %>><%= s.position %></option>
+                      <% end %>
+                    </select>
+                    <p class="column-current-position">Current position: <%= status.position %></p>
+                    <button type="button" class="column-move-button" data-action="click->column-menu#moveColumn">
+                      Move
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Move All Cards Submenu -->
+                <div class="column-menu-dropdown hidden" data-column-menu-target="moveCardsMenu">
+                  <div class="column-menu-header">
+                    <button type="button" class="column-menu-back" data-action="click->column-menu#showMainMenu">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                      </svg>
+                    </button>
+                    Move all cards
+                    <button type="button" class="column-menu-close" data-action="click->column-menu#hideAll">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div class="column-move-content">
+                    <label class="column-move-label">Move to column</label>
+                    <select class="column-move-select" data-column-menu-target="targetColumnSelect">
+                      <% TaskStatus.all.where.not(id: status.id).each do |s| %>
+                        <option value="<%= s.id %>"><%= s.name %></option>
+                      <% end %>
+                    </select>
+                    <p class="column-current-position"><%= pluralize(status_tasks.count, 'card') %> will be moved</p>
+                    <button type="button" class="column-move-button" data-action="click->column-menu#moveAllCards">
+                      Move Cards
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% if status.description.present? %>
+              <p class="column-description"><%= status.description %></p>
+            <% end %>
+          </div>
+
+          <!-- Column Body -->
+          <div
+            class="board-column-cards" 
+            data-controller="sortable"
+            data-sortable-status-value="<%= status.id %>"
+          >
+            <% if status_tasks.blank? %>
+              <!-- Empty Column State -->
+              <div class="column-empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <p>No tasks yet</p>
+              </div>
+            <% else %>
+              <!-- Task Cards -->
+              <% status_tasks.each do |task| %>
+                <%= link_to project_task_path(@project, task), 
+                    class: 'task-card',
+                    data: { 
+                      task_id: task.id,
+                      action: "click->modal#open"
+                    } do %>
+                  <!-- Card Header -->
+                  <div class="task-card-header">
+                    <h4 class="task-card-title"><%= task.title %></h4>
+                  </div>
+
+                  <!-- Card Description -->
+                  <% if task.description.present? %>
+                    <p class="task-card-description"><%= truncate(task.description, length: 80) %></p>
+                  <% end %>
+
+                  <!-- Card Footer -->
+                  <div class="task-card-footer">
+                    <div class="task-card-meta">
+                      <!-- Due Date -->
+                      <% if task.due_date.present? %>
+                        <span class="task-meta-item task-due-date">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                          </svg>
+                          <%= task.due_date.strftime("%b %d") %>
+                        </span>
+                      <% end %>
+                    </div>
+
+                    <!-- Assignee -->
+                    <% if task.assignee.present? %>
+                      <div class="task-assignee" title="<%= task.assignee.username %>">
+                        <%= task.assignee.username.first.upcase %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <!-- Column Footer -->
+          <div class="board-column-footer" data-controller="add-card">
+            <!-- Add Card Button -->
+            <button type="button" class="add-card-button" data-add-card-target="button" data-action="click->add-card#showForm">
+              <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add card
+            </button>
+
+            <!-- Inline Card Form -->
+            <div class="add-card-form" data-add-card-target="form" style="display: none;">
+              <%= form_with(model: [@project, @project.tasks.build(task_status: status)], 
+                            class: 'inline-card-form',
+                            data: { action: 'keydown->add-card#handleKeydown' }) do |f| %>
+                <%= f.hidden_field :task_status_id, value: status.id %>
+                
+                <div class="inline-card-input">
+                  <%= f.text_field :title, 
+                      placeholder: 'Enter card title...', 
+                      class: 'inline-card-title',
+                      required: true %>
+                </div>
+
+                <div class="inline-card-actions">
+                  <%= f.button 'Add card', type: 'submit', class: 'btn btn-primary btn-sm' %>
+                  <button type="button" class="btn btn-secondary btn-sm" data-action="click->add-card#hideForm">
+                    Cancel
+                  </button>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Add Column Button -->
+      <div class="add-column-container">
+        <%= link_to new_task_status_path(project_id: @project.id), class: 'add-column-button', data: { action: 'click->modal#open' } do %>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Add column
+        <% end %>
+      </div>
+    </div>
+    <% end %>
+  </div>
+
+  <!-- Task Details Modal -->
+  <%= render "shared/modal" do %>
+    <turbo-frame id="task_details"></turbo-frame>
+    <turbo-frame id="column_edit_details"></turbo-frame>
+    <turbo-frame id="column_new"></turbo-frame>
+    <turbo-frame id="column_delete"></turbo-frame>
+  <% end %>
 </div>
 
 <style>
+/* Prevent page-level vertical scrolling */
+body {
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+}
 
-    .task-carousel {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        height: 15%;
-        width: 100%;
-        overflow-y: scroll;
-    }
+/* Board Header */
+.board-header {
+  background: white;
+  border-bottom: 1px solid var(--color-slate-200);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+  width: 100%;
+  margin: 0;
+}
 
-    .task-card {
-        box-shadow: 0 0 10px #c9c9c9;
-        border: 1px solid #c9c9c9;
-        border-radius: 5px;
-        margin: 1rem;
-        padding: .5rem;
-        width: fit-content;
-    }
+.board-header-container {
+  padding: var(--spacing-md) var(--spacing-xl);
+  max-width: 100%;
+}
 
+.board-header-main {
+  margin-bottom: var(--spacing-sm);
+}
+
+.board-title-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
+}
+
+.board-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+}
+
+.board-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px var(--spacing-sm);
+  background: linear-gradient(135deg, var(--color-slate-100) 0%, var(--color-slate-50) 100%);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-slate-600);
+}
+
+.board-description {
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.board-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.board-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.board-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+  font-weight: 500;
+}
+
+.board-actions-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.board-actions-group .btn-primary,
+.board-actions-group .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+/* Board Container */
+.board-container {
+  height: calc(100vh - 140px);
+  background: var(--color-slate-50);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+}
+
+.board-scroll-area {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--spacing-lg);
+  flex: 1;
+  height: 100%;
+}
+
+.board-scroll-area::-webkit-scrollbar {
+  height: 12px;
+}
+
+.board-scroll-area::-webkit-scrollbar-track {
+  background: var(--color-slate-100);
+  border-radius: var(--radius-full);
+}
+
+.board-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--color-slate-300);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-slate-100);
+}
+
+.board-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
+}
+
+/* Empty State */
+.board-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+  text-align: center;
+  height: 100%;
+  gap: var(--spacing-3xl);
+}
+
+.empty-state-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-state-icon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--color-slate-100) 0%, var(--color-slate-50) 100%);
+  border-radius: var(--radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-lg);
+  border: 2px solid var(--color-slate-200);
+}
+
+.empty-state-icon svg {
+  width: 32px;
+  height: 32px;
+  color: var(--color-slate-400);
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.empty-state-description {
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+  margin: 0 0 var(--spacing-lg) 0;
+}
+
+.empty-state-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-slate-900) 0%, var(--color-slate-800) 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Empty Board Preview */
+.empty-board-preview {
+  display: flex;
+  gap: var(--spacing-lg);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.empty-column {
+  width: 280px;
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-column-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.empty-column-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--color-slate-300);
+  border-radius: 50%;
+}
+
+.empty-column-title {
+  height: 16px;
+  width: 80px;
+  background: var(--color-slate-200);
+  border-radius: var(--radius-sm);
+}
+
+.empty-card {
+  background: var(--color-slate-50);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  height: 80px;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Board Columns */
+.board-columns {
+  display: flex;
+  gap: var(--spacing-lg);
+  height: 100%;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  min-width: min-content;
+}
+
+/* Column Component */
+.board-column {
+  min-width: 320px;
+  width: 320px;
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Column Header */
+.board-column-header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-slate-200);
+  flex-shrink: 0;
+  background: white;
+}
+
+.column-header-main {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.column-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.column-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+  flex: 1;
+}
+
+.column-description {
+  font-size: 0.75rem;
+  color: var(--color-slate-500);
+  margin: var(--spacing-xs) 0 0 0;
+  line-height: 1.4;
+}
+
+.column-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--spacing-xs);
+  background: var(--color-slate-100);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-slate-600);
+}
+
+/* Column Menu */
+.column-menu {
+  position: relative;
+  margin-left: auto;
+}
+
+.column-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-slate-400);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.column-menu-button:hover {
+  background: var(--color-slate-100);
+  color: var(--color-slate-600);
+}
+
+.column-menu-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.column-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--spacing-xs);
+  background: white;
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 240px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.column-menu-dropdown.hidden {
+  display: none;
+}
+
+.column-menu-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-slate-500);
+  background: var(--color-slate-50);
+  border-bottom: 1px solid var(--color-slate-200);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  justify-content: space-between;
+}
+
+.column-menu-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-slate-600);
+  transition: all var(--transition-fast);
+  margin-left: calc(var(--spacing-xs) * -1);
+}
+
+.column-menu-back:hover {
+  color: var(--color-slate-900);
+}
+
+.column-menu-back svg {
+  width: 14px;
+  height: 14px;
+}
+
+.column-menu-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-slate-600);
+  transition: all var(--transition-fast);
+  margin-right: calc(var(--spacing-xs) * -1);
+}
+
+.column-menu-close:hover {
+  color: var(--color-slate-900);
+}
+
+.column-menu-close svg {
+  width: 14px;
+  height: 14px;
+}
+
+.column-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.9375rem;
+  color: var(--color-slate-700);
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.column-menu-item:hover {
+  background: var(--color-slate-50);
+  color: var(--color-slate-900);
+}
+
+.column-menu-item svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.column-menu-item-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.column-menu-item-disabled:hover {
+  background: transparent;
+  color: var(--color-slate-700);
+}
+
+.column-menu-item-danger {
+  color: var(--color-red-600);
+}
+
+.column-menu-item-danger:hover {
+  background: var(--color-red-50);
+  color: var(--color-red-700);
+}
+
+/* Column Move Submenu */
+.column-move-content {
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.column-current-position {
+  font-size: 0.75rem;
+  color: var(--color-slate-500);
+  margin: 0;
+}
+
+.column-move-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-slate-700);
+  margin: 0;
+}
+
+.column-move-select {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--color-slate-700);
+  background: white;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.column-move-select:focus {
+  outline: none;
+  border-color: var(--color-blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.column-move-button {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-blue-600);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.column-move-button:hover {
+  background: var(--color-blue-700);
+}
+
+/* Add Column Container */
+.add-column-container {
+  min-width: 280px;
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.add-column-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-slate-600);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 2px dashed var(--color-slate-300);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.add-column-button:hover {
+  background: white;
+  border-color: var(--color-slate-400);
+  color: var(--color-slate-900);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.add-column-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Column Body */
+.board-column-cards {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-md);
+  background: var(--color-slate-50);
+  position: relative;
+  min-height: 100px;
+}
+
+.board-column-cards::-webkit-scrollbar {
+  width: 8px;
+}
+
+.board-column-cards::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board-column-cards::-webkit-scrollbar-thumb {
+  background: var(--color-slate-300);
+  border-radius: var(--radius-full);
+}
+
+.board-column-cards::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
+}
+
+/* Empty Column State */
+.column-empty-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-slate-400);
+  pointer-events: none;
+  z-index: 0;
+  width: 100%;
+}
+
+.column-empty-state svg {
+  width: 32px;
+  height: 32px;
+  margin-bottom: var(--spacing-sm);
+  opacity: 0.5;
+}
+
+.column-empty-state p {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Column Footer */
+.board-column-footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-slate-200);
+  flex-shrink: 0;
+  background: white;
+}
+
+.add-card-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-slate-100);
+  color: var(--color-slate-600);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  border: none;
+  cursor: pointer;
+}
+
+.add-card-button:hover {
+  background: var(--color-slate-200);
+  color: var(--color-slate-900);
+}
+
+/* Inline Card Form */
+.add-card-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.inline-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.inline-card-input {
+  width: 100%;
+}
+
+.inline-card-title {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-blue-500);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-slate-900);
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-base);
+}
+
+.inline-card-title:focus {
+  outline: none;
+  border-color: var(--color-blue-600);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.inline-card-title::placeholder {
+  color: var(--color-slate-400);
+}
+
+.inline-card-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+/* Task Card Component */
+.task-card {
+  background: white;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+  border: 1px solid var(--color-slate-200);
+  cursor: grab;
+  transition: all var(--transition-base);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-slate-300);
+  transform: translateY(-2px);
+}
+
+/* Drag & Drop States */
+.task-card-ghost {
+  opacity: 0.4;
+  background: var(--color-slate-100);
+}
+
+.task-card-dragging {
+  opacity: 0.8;
+  transform: rotate(2deg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Header */
+.task-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.task-card-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-slate-900);
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.task-card-menu {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-slate-400);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.task-card-menu:hover {
+  background: var(--color-slate-100);
+  color: var(--color-slate-600);
+}
+
+.task-card-menu svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Card Description */
+.task-card-description {
+  font-size: 0.8125rem;
+  color: var(--color-slate-600);
+  line-height: 1.5;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+/* Card Footer */
+.task-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.task-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.task-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--color-slate-600);
+  font-weight: 500;
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--radius-sm);
+}
+
+.task-meta-item svg {
+  width: 12px;
+  height: 12px;
+}
+
+.task-due-date {
+  background: var(--color-slate-100);
+}
+
+/* Assignee Avatar */
+.task-assignee {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-blue-500) 0%, var(--color-purple-500) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+.empty-state-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-slate-900) 0%, var(--color-slate-800) 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Empty Board Preview */
+.board-columns {
+  display: flex;
+  gap: var(--spacing-lg);
+  height: 100%;
+  align-items: flex-start;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .board-header-container {
+    padding: var(--spacing-md) var(--spacing-md);
+  }
+
+  .board-title {
+    font-size: 1.25rem;
+  }
+
+  .board-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .board-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .board-container {
+    height: calc(100vh - 180px);
+  }
+
+  .board-scroll-area {
+    padding: var(--spacing-md);
+  }
+}
 </style>

@@ -1,0 +1,660 @@
+/* ========================================================================
+   Task Modal Styles
+   ========================================================================
+   
+   This file contains styles specific to task CRUD modals (show/edit/new).
+   These styles are separated from the global application.css because they
+   are only used within modal contexts.
+   
+   These styles must be in a separate CSS file (not inline in views) because
+   the modal content is loaded dynamically via JavaScript fetch and injected
+   into turbo-frame elements. Inline <style> tags within turbo-frames are
+   not reliably processed by browsers when injected via JavaScript.
+   
+   By keeping these styles in a separate stylesheet that's loaded with the
+   main application, they're guaranteed to be available when modal content
+   is dynamically loaded.
+   ======================================================================== */
+
+/* Modal Wrapper & Backdrop */
+.task-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: none;
+}
+
+.task-modal-wrapper:not(.hidden) {
+  display: block;
+}
+
+.task-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+}
+
+.task-modal-content {
+  background: white;
+  border-radius: var(--radius-xl);
+  width: 850px;
+  max-width: 110vw;
+  height: auto;
+  max-height: 100vh;
+  margin: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: modalSlideIn 0.2s ease-out;
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close-button-absolute {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--color-slate-100);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  color: var(--color-slate-600);
+  z-index: 10;
+}
+
+.modal-close-button-absolute:hover {
+  background: var(--color-slate-200);
+}
+
+.modal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  min-height: 200px;
+}
+
+.modal-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-slate-200);
+  border-top-color: var(--color-blue-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.modal-error {
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--color-red-600);
+}
+
+turbo-frame#task_details,
+turbo-frame#column_edit_details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Task Details Turbo Frame Content */
+turbo-frame#task_details,
+turbo-frame#column_edit_details {
+  display: flex !important;
+  flex-direction: column;
+  width: 100%;
+}
+
+.task-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+
+/* Header Section */
+.task-header-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.task-title-main {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.task-divider {
+  height: 2px;
+  background: var(--color-slate-200);
+  margin: var(--spacing-sm) 0;
+  width: 100%;
+}
+
+/* Meta Information Grid */
+.task-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-xl);
+  background: var(--color-slate-50);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-slate-200);
+}
+
+/* Only add margin-bottom in forms (edit view) */
+form .task-meta-grid {
+  margin-bottom: var(--spacing-xl);
+}
+
+.task-modal-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.task-detail-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-slate-500);
+}
+
+.task-meta-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-slate-700);
+}
+
+.task-meta-value.task-meta-empty {
+  color: var(--color-slate-400);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.task-assignee-compact {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.task-assignee-avatar-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-blue-500) 0%, var(--color-purple-500) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Status Badge */
+.task-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  width: fit-content;
+  letter-spacing: 0.02em;
+}
+
+/* Description Section */
+.task-description-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-slate-200);
+}
+
+.task-detail-text {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-slate-700);
+  margin: 0;
+}
+
+/* Task Modal Actions */
+.task-modal-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-md);
+  margin-top: auto;
+  border-top: 2px solid var(--color-slate-200);
+}
+
+.task-modal-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.task-delete-btn:hover {
+  background: var(--color-red-50) !important;
+  color: var(--color-red-600) !important;
+  border-color: var(--color-red-200) !important;
+}
+
+/* Task Form Styles */
+.task-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.task-form-field:last-of-type {
+  margin-bottom: 0;
+}
+
+.task-input,
+.task-textarea,
+.task-select {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--color-slate-700);
+  background: white;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.task-input:focus,
+.task-textarea:focus,
+.task-select:focus {
+  outline: none;
+  border-color: var(--color-blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.task-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.task-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-md) center;
+  padding-right: calc(var(--spacing-md) * 3);
+}
+
+.task-form-errors {
+  background: var(--color-red-50);
+  border: 1px solid var(--color-red-200);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  color: var(--color-red-600);
+}
+
+.task-form-errors strong {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+}
+
+.task-form-errors ul {
+  margin: 0;
+  padding-left: var(--spacing-lg);
+}
+
+.task-form-errors li {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Delete Confirmation Styles */
+.task-delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+}
+
+.task-delete-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-red-50) 0%, var(--color-orange-50) 100%);
+  border-radius: var(--radius-full);
+  border: 3px solid var(--color-red-200);
+}
+
+.task-delete-icon svg {
+  width: 52px;
+  height: 52px;
+  color: var(--color-red-600);
+}
+
+.task-delete-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-red-600);
+  margin: 0;
+  text-align: center;
+}
+
+.task-delete-message {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-slate-700);
+  margin: 0;
+}
+
+.task-delete-message strong {
+  color: var(--color-slate-900);
+  font-weight: 700;
+}
+
+.task-delete-warning {
+  font-size: 0.9375rem;
+  color: var(--color-slate-500);
+  font-style: italic;
+  margin: 0;
+  margin-top: calc(var(--spacing-md) * -1);
+}
+
+.task-delete-confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: transparent;
+  color: var(--color-red-600);
+  border: 2px solid var(--color-red-600);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex: 1;
+  text-decoration: none;
+}
+
+.task-delete-confirm-btn:hover {
+  background: var(--color-red-600);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* ========================================================================
+   Column Edit Modal Styles
+   ======================================================================== */
+
+.modal-task-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+
+.task-details-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.task-details-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.task-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.task-form-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.task-form-group label {
+  display: flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-slate-500);
+}
+
+.task-form-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--color-slate-700);
+  background: white;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  font-family: inherit;
+}
+
+.task-form-input:focus {
+  outline: none;
+  border-color: var(--color-blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.task-form-textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  color: var(--color-slate-700);
+  background: white;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+.task-form-textarea:focus {
+  outline: none;
+  border-color: var(--color-blue-500);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl) 0 var(--spacing-md);
+  margin-top: var(--spacing-2xl);
+  border-top: 2px solid var(--color-slate-200);
+}
+
+.modal-button-primary {
+  flex: 1;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-slate-900);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-button-primary:hover {
+  background: var(--color-slate-800);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.modal-button-primary:active {
+  background: var(--color-slate-900);
+  transform: translateY(0);
+}
+
+/* Color Picker in Modal */
+.task-form-group .color-picker {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.task-form-group .color-option {
+  cursor: pointer;
+  position: relative;
+}
+
+.task-form-group .color-radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.task-form-group .color-checkbox {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+  position: relative;
+  cursor: pointer;
+}
+
+.task-form-group .color-checkbox svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  stroke: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.task-form-group .color-radio:checked + .color-checkbox svg {
+  opacity: 1;
+}
+
+.task-form-group .color-checkbox:hover {
+  transform: scale(1.1);
+  border-color: var(--color-slate-300);
+}
+
+.task-form-group .color-radio:checked + .color-checkbox {
+  border-color: var(--color-slate-400);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Color variants for modal */
+.task-form-group .color-gray { background-color: var(--color-slate-400); }
+.task-form-group .color-red { background-color: var(--color-red-500); }
+.task-form-group .color-orange { background-color: var(--color-orange-500); }
+.task-form-group .color-yellow { background-color: #eab308; }
+.task-form-group .color-green { background-color: var(--color-green-500); }
+.task-form-group .color-blue { background-color: var(--color-blue-500); }
+.task-form-group .color-purple { background-color: var(--color-purple-500); }
+.task-form-group .color-pink { background-color: #ec4899; }
+
+/* Error messages in modal */
+.modal-task-details .error-messages {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.modal-task-details .error-messages h3 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin: 0 0 var(--spacing-sm) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-task-details .error-messages ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-task-details .error-messages li {
+  font-size: 0.8125rem;
+  color: #991b1b;
+  margin: var(--spacing-xs) 0;
+  line-height: 1.5;
+}
+
+.modal-task-details .error-messages li::before {
+  content: "•";
+  margin-right: var(--spacing-sm);
+  color: #dc2626;
+}

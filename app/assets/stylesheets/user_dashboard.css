@@ -1,0 +1,153 @@
+/* ========================================================================
+   User Dashboard Styles
+   ========================================================================
+   
+   Styles for the user dashboard page showing projects list
+   ======================================================================== */
+
+.logout-button {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  width: auto;
+  background: var(--color-blue-700);
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.logout-button:hover {
+  background: var(--color-blue-600);
+  transform: translateY(-1px);
+}
+
+.user-dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2xl);
+  padding: var(--spacing-xl);
+}
+
+.user-dashboard h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0;
+}
+
+.user-dashboard p {
+  text-align: center;
+  color: var(--color-slate-600);
+  margin: 0;
+}
+
+.projects-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-2xl);
+  padding: 0;
+  list-style-type: none;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.project-card {
+  border: 1px solid var(--color-slate-200);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background: white;
+  transition: all var(--transition-base);
+}
+
+.project-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.project-card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.project-card p {
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+  margin: var(--spacing-sm) 0;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.project-card p span {
+  font-weight: 600;
+  color: var(--color-slate-700);
+  margin-right: var(--spacing-xs);
+}
+
+.project-card a {
+  display: inline-block;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-slate-900);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all var(--transition-base);
+}
+
+.project-card a:hover {
+  background: var(--color-slate-800);
+  transform: translateY(-1px);
+}
+
+.project-card-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-slate-50);
+  border: 2px dashed var(--color-slate-300);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  min-height: 200px;
+}
+
+.project-card-add:hover {
+  border-color: var(--color-blue-500);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.add-project-link {
+  background: var(--color-slate-100) !important;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-project-content {
+  text-align: center;
+}
+
+.plus-icon {
+  font-size: 3rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-blue-600);
+}
+
+.add-project-content p {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-blue-600);
+}

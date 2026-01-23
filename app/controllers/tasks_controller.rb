@@ -1,8 +1,8 @@
 class TasksController < ApplicationController
 
     before_action :authenticate_user!
-    before_action :set_project
-    before_action :set_task, only: [:show, :edit, :update, :destroy]
+    before_action :set_project, except: [:update_status]
+    before_action :set_task, only: [:show, :edit, :update, :destroy, :delete, :update_status]
     before_action :load_status_options, only: [:new, :edit, :create, :update]
 
     def index
@@ -10,6 +10,9 @@ class TasksController < ApplicationController
     end
 
     def show
+        @project = Project.find(params[:project_id])
+        @task = @project.tasks.find(params[:id])
+        render layout: false
     end
 
     def new
@@ -23,36 +26,62 @@ class TasksController < ApplicationController
     def create
         @task = @project.tasks.build(task_params)
         if @task.save
-            redirect_to project_tasks_path(@project), notice: 'Task was successfully created.'
+            respond_to do |format|
+                format.html { redirect_to project_path(@project), notice: 'Task was successfully created.' }
+                format.turbo_stream { redirect_to project_path(@project), status: :see_other }
+            end
         else
-            render :new
+            respond_to do |format|
+                format.html { render :new }
+                format.turbo_stream { render turbo_stream: turbo_stream.replace("new_task_form", partial: "tasks/form", locals: { task: @task, project: @project }) }
+            end
         end
     end
 
     def edit
+        render layout: false
     end
 
     def update
         if @task.update(task_params)
-            redirect_to project_task_path(@project, @task), notice: 'Task was successfully updated.'
+            respond_to do |format|
+                format.html { redirect_to project_path(@project), notice: 'Task was successfully updated.' }
+                format.turbo_stream { redirect_to project_path(@project), status: :see_other }
+            end
         else
-            render :edit
+            render :edit, layout: false
         end
+    end
+
+    def delete
+        render layout: false
     end
 
     def destroy
         @task.destroy
-        redirect_to project_tasks_path(@project), notice: 'Task was successfully deleted.'
+        redirect_to project_path(@project), notice: 'Task was successfully deleted.'
+    end
+
+    def update_status
+        if @task.update(task_status_id: params[:task_status_id])
+            head :ok
+        else
+            head :unprocessable_entity
+        end
     end
 
     private
 
     def set_project
-        @project = Project.find(params[:project_id])
+        @project = Project.find(params[:project_id]) if params[:project_id]
     end
 
     def set_task
-        @task = @project.tasks.find(params[:id])
+        if params[:project_id]
+            @task = @project.tasks.find(params[:id])
+        else
+            @task = Task.find(params[:id])
+        end
     end
 
     def task_params

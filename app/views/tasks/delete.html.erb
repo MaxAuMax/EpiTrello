@@ -1,0 +1,45 @@
+<turbo-frame id="task_details">
+  <div class="task-details-content">
+    <!-- Title Section -->
+    <div class="task-header-section">
+      <h2 class="task-title-main task-delete-title">Delete Task?</h2>
+    </div>
+
+    <!-- Divider -->
+    <div class="task-divider"></div>
+
+    <!-- Confirmation Message -->
+    <div class="task-delete-confirmation">
+      <div class="task-delete-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <circle cx="12" cy="17" r="0.5" fill="currentColor"></circle>
+        </svg>
+      </div>
+      <p class="task-delete-message">
+        Are you sure you want to delete <strong>"<%= @task.title %>"</strong>?
+      </p>
+      <p class="task-delete-warning">
+        This action cannot be undone. The task will be permanently removed from the project.
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="task-modal-actions">
+      <%= link_to project_task_path(@project, @task), class: 'btn btn-secondary btn-sm', data: { action: 'click->modal#navigate' } do %>
+        Cancel
+      <% end %>
+      <%= button_to project_task_path(@project, @task), 
+          method: :delete,
+          class: 'task-delete-confirm-btn',
+          form: { data: { turbo: false } } do %>
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        Delete Task
+      <% end %>
+    </div>
+  </div>
+</turbo-frame>
