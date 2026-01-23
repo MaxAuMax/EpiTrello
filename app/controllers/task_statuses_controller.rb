@@ -1,6 +1,6 @@
 class TaskStatusesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task_status, only: [:edit, :update, :delete, :destroy, :move]
+  before_action :set_task_status, only: [:edit, :update, :delete, :destroy, :move, :move_all_cards]
 
   def new
     @task_status = TaskStatus.new
@@ -78,6 +78,20 @@ class TaskStatusesController < ApplicationController
     head :ok
   rescue => e
     Rails.logger.error("Failed to move column: #{e.message}")
+    head :unprocessable_entity
+  end
+
+  def move_all_cards
+    target_column_id = params[:target_column_id]
+    
+    if target_column_id.present?
+      @task_status.tasks.update_all(task_status_id: target_column_id)
+      head :ok
+    else
+      head :unprocessable_entity
+    end
+  rescue => e
+    Rails.logger.error("Failed to move cards: #{e.message}")
     head :unprocessable_entity
   end
 

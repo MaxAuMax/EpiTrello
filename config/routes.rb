@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     member do
       get :delete
       patch :move
+      patch :move_all_cards
     end
   end
 end

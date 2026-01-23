@@ -110,6 +110,26 @@
                     Move list
                   </button>
                   
+                  <button type="button" class="column-menu-item column-menu-item-disabled" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="4" y1="6" x2="20" y2="6"></line>
+                      <line x1="4" y1="12" x2="20" y2="12"></line>
+                      <line x1="4" y1="18" x2="20" y2="18"></line>
+                      <circle cx="20" cy="6" r="1"></circle>
+                      <circle cx="20" cy="12" r="1"></circle>
+                      <circle cx="20" cy="18" r="1"></circle>
+                    </svg>
+                    Sort by
+                  </button>
+                  
+                  <button type="button" class="column-menu-item" data-action="click->column-menu#showMoveCardsMenu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Move all cards in this list
+                  </button>
+                  
                   <%= link_to edit_task_status_path(status, project_id: @project.id), class: 'column-menu-item', data: { action: 'click->modal#open' } do %>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -155,6 +175,38 @@
                     <p class="column-current-position">Current position: <%= status.position %></p>
                     <button type="button" class="column-move-button" data-action="click->column-menu#moveColumn">
                       Move
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Move All Cards Submenu -->
+                <div class="column-menu-dropdown hidden" data-column-menu-target="moveCardsMenu">
+                  <div class="column-menu-header">
+                    <button type="button" class="column-menu-back" data-action="click->column-menu#showMainMenu">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                      </svg>
+                    </button>
+                    Move all cards
+                    <button type="button" class="column-menu-close" data-action="click->column-menu#hideAll">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div class="column-move-content">
+                    <label class="column-move-label">Move to column</label>
+                    <select class="column-move-select" data-column-menu-target="targetColumnSelect">
+                      <% TaskStatus.all.where.not(id: status.id).each do |s| %>
+                        <option value="<%= s.id %>"><%= s.name %></option>
+                      <% end %>
+                    </select>
+                    <p class="column-current-position"><%= pluralize(status_tasks.count, 'card') %> will be moved</p>
+                    <button type="button" class="column-move-button" data-action="click->column-menu#moveAllCards">
+                      Move Cards
                     </button>
                   </div>
                 </div>
@@ -651,7 +703,7 @@
   border: 1px solid var(--color-slate-200);
   border-radius: var(--radius-md);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
+  min-width: 240px;
   z-index: 100;
   overflow: hidden;
 }
@@ -744,6 +796,16 @@
   width: 14px;
   height: 14px;
   flex-shrink: 0;
+}
+
+.column-menu-item-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.column-menu-item-disabled:hover {
+  background: transparent;
+  color: var(--color-slate-700);
 }
 
 .column-menu-item-danger {
