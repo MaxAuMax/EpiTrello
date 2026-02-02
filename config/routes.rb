@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         get :delete
       end
     end
+    resources :tags, except: [:show]
   end
 
   # Task status update for drag & drop
