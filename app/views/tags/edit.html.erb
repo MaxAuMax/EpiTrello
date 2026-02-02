@@ -1,0 +1,320 @@
+<div class="modal-overlay" data-controller="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2><%= @tag.new_record? ? 'Nouveau tag' : 'Modifier le tag' %></h2>
+      <button type="button" class="modal-close" data-action="click->modal#close">×</button>
+    </div>
+
+    <%= form_with(model: [@project, @tag], local: false, html: { class: 'tag-form' }) do |f| %>
+      <div class="modal-body">
+        <% if @tag.errors.any? %>
+          <div class="alert alert-error">
+            <strong><%= pluralize(@tag.errors.count, "erreur") %> :</strong>
+            <ul>
+              <% @tag.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="form-group">
+          <%= f.label :name, 'Nom du tag', class: 'form-label' %>
+          <%= f.text_field :name, class: 'form-input', placeholder: 'Ex: Urgent, Bug, Feature...', autofocus: true %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :color, 'Couleur', class: 'form-label' %>
+          <div class="color-input-group">
+            <%= f.color_field :color, class: 'form-color-input' %>
+            <%= f.text_field :color, class: 'form-input form-color-text', placeholder: '#000000' %>
+          </div>
+          <div class="color-presets">
+            <span class="color-preset-label">Couleurs suggérées :</span>
+            <div class="color-preset-list">
+              <% [
+                '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16',
+                '#22c55e', '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9',
+                '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef',
+                '#ec4899', '#f43f5e', '#64748b', '#475569', '#1e293b'
+              ].each do |color| %>
+                <button type="button" class="color-preset" style="background-color: <%= color %>;" data-color="<%= color %>" onclick="document.getElementById('<%= f.object_name %>_color').value='<%= color %>';event.preventDefault();"></button>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="tag-preview-section">
+          <span class="tag-preview-label">Aperçu :</span>
+          <div class="tag-preview-display">
+            <span class="tag-badge" id="tag-preview" style="background-color: <%= @tag.color || '#808080' %>;">
+              <span id="tag-preview-text"><%= @tag.name.presence || 'Nom du tag' %></span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" data-action="click->modal#close">Annuler</button>
+        <%= f.submit @tag.new_record? ? 'Créer le tag' : 'Mettre à jour', class: 'btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const nameInput = document.querySelector('input[name="tag[name]"]');
+  const colorInput = document.querySelector('input[type="color"]');
+  const colorTextInput = document.querySelector('.form-color-text');
+  const preview = document.getElementById('tag-preview');
+  const previewText = document.getElementById('tag-preview-text');
+
+  if (nameInput) {
+    nameInput.addEventListener('input', function() {
+      previewText.textContent = this.value || 'Nom du tag';
+    });
+  }
+
+  if (colorInput && colorTextInput) {
+    colorInput.addEventListener('input', function() {
+      colorTextInput.value = this.value;
+      preview.style.backgroundColor = this.value;
+    });
+
+    colorTextInput.addEventListener('input', function() {
+      if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+        colorInput.value = this.value;
+        preview.style.backgroundColor = this.value;
+      }
+    });
+  }
+});
+</script>
+
+<style>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-slate-200);
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-slate-900);
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--color-slate-400);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--color-slate-100);
+  color: var(--color-slate-600);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-slate-200);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--color-slate-700);
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--color-slate-300);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.color-input-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.form-color-input {
+  width: 60px;
+  height: 42px;
+  border: 1px solid var(--color-slate-300);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-color-text {
+  flex: 1;
+}
+
+.color-presets {
+  margin-top: 1rem;
+}
+
+.color-preset-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-slate-600);
+  margin-bottom: 0.5rem;
+}
+
+.color-preset-list {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.5rem;
+}
+
+.color-preset {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--color-slate-200);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.color-preset:hover {
+  transform: scale(1.1);
+  border-color: var(--color-slate-400);
+}
+
+.tag-preview-section {
+  background: var(--color-slate-50);
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.tag-preview-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-slate-600);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.tag-preview-display {
+  display: flex;
+  justify-content: center;
+}
+
+.tag-badge {
+  display: inline-flex;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+}
+
+.alert ul {
+  margin: 0.5rem 0 0 1.25rem;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-secondary {
+  background: var(--color-slate-100);
+  color: var(--color-slate-700);
+}
+
+.btn-secondary:hover {
+  background: var(--color-slate-200);
+}
+</style>
