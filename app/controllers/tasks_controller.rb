@@ -12,6 +12,7 @@ class TasksController < ApplicationController
     def show
         @project = Project.find(params[:project_id])
         @task = @project.tasks.find(params[:id])
+        @comments = @task.comments.includes(:user).order(created_at: :asc)
         render layout: false
     end
 

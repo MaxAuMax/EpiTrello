@@ -71,4 +71,7 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+  # Allow web-console access from Docker networks
+  config.web_console.whitelisted_ips = ['172.0.0.0/8', '192.168.0.0/16']
 end

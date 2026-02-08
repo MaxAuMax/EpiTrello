@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_22_181350) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_08_144235) do
+  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "user_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_comments_on_task_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
   create_table "project_statuses", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -34,6 +44,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_22_181350) do
     t.datetime "updated_at", null: false
     t.index ["project_id"], name: "index_projects_users_on_project_id"
     t.index ["user_id"], name: "index_projects_users_on_user_id"
+  end
+
+  create_table "tags", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.string "name", null: false
+    t.string "color", default: "#808080"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id", "name"], name: "index_tags_on_project_id_and_name", unique: true
+    t.index ["project_id"], name: "index_tags_on_project_id"
+  end
+
+  create_table "tags_tasks", id: false, charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "task_id", null: false
+    t.index ["tag_id", "task_id"], name: "index_tags_tasks_on_tag_id_and_task_id", unique: true
+    t.index ["tag_id"], name: "index_tags_tasks_on_tag_id"
+    t.index ["task_id"], name: "index_tags_tasks_on_task_id"
   end
 
   create_table "task_statuses", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
@@ -60,6 +88,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_22_181350) do
     t.index ["task_status_id"], name: "index_tasks_on_task_status_id"
   end
 
+  create_table "tasks_tags", id: false, charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["tag_id"], name: "index_tasks_tags_on_tag_id"
+    t.index ["task_id", "tag_id"], name: "index_tasks_tags_on_task_id_and_tag_id", unique: true
+    t.index ["task_id"], name: "index_tasks_tags_on_task_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
     t.string "username", default: "", null: false
     t.string "email", default: "", null: false
@@ -74,8 +110,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_22_181350) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "comments", "tasks"
+  add_foreign_key "comments", "users"
   add_foreign_key "projects", "project_statuses"
+  add_foreign_key "tags", "projects"
+  add_foreign_key "tags_tasks", "tags"
+  add_foreign_key "tags_tasks", "tasks"
   add_foreign_key "tasks", "projects"
   add_foreign_key "tasks", "task_statuses"
   add_foreign_key "tasks", "users", column: "assignee_id"
+  add_foreign_key "tasks_tags", "tags"
+  add_foreign_key "tasks_tags", "tasks"
 end

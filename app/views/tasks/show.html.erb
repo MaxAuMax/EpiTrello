@@ -82,6 +82,45 @@
       </p>
     </div>
 
+    <%# Comments Section %>
+
+    <div class="task-comments-section">
+      <span class="task-detail-label">
+        <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path>
+        </svg>
+        Comments
+      </span>
+      <% unless @comments.empty? %>
+          <div class="task-comments-list">
+            <% @comments.each do |comment| %>
+              <div class="task-comment-item">
+                <div class="task-comment-header">
+                  <div class="task-assignee-avatar-small">
+                    <%= comment.user.username.first.upcase %>
+                  </div>
+                  <div class="task-comment-user-info">
+                    <span class="task-comment-username"><%= comment.user.username %></span>
+                    <span class="task-comment-timestamp"><%= time_ago_in_words(comment.created_at) %> ago</span>
+                  </div>
+                </div>
+                <div class="task-comment-content">
+                  <p class="task-comment-text"><%= comment.content %></p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+      <% end %>
+
+      <div class="task-add-comment-form">
+        <%= form_with(model: [@project, @task, Comment.new], local: true, html: { class: 'add-comment-form' }) do |form| %>
+          <%= form.text_area :content, placeholder: "Add a comment...", rows: 2, class: "form-control form-control-sm" %>
+          <br>
+          <%= form.submit "Comment", class: "btn btn-primary btn-sm mt-1" %>
+        <% end %>
+      </div>
+    </div>
+
     <!-- Actions -->
     <div class="task-modal-actions">
       <%= link_to edit_project_task_path(@project, @task), class: 'btn btn-secondary btn-sm', data: { action: 'click->modal#navigate' } do %>
