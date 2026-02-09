@@ -86,11 +86,12 @@ class TasksController < ApplicationController
     end
 
     def task_params
-        params.require(:task).permit(:title, :description, :due_date, :task_status_id, :assignee_id)
+        params.require(:task).permit(:title, :description, :due_date, :task_status_id, :assignee_id, tag_ids: [])
     end
 
     def load_status_options
         @status_options = TaskStatus.all.map { |status| [status.name, status.id] }
+        @available_tags = @project.tags.order(:name) if @project
     end
 
 end

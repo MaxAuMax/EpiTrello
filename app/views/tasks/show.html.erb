@@ -65,6 +65,26 @@
       </div>
     </div>
 
+    <!-- Tags Section -->
+    <% if @task.tags.any? %>
+      <div class="task-tags-section">
+        <span class="task-detail-label">
+          <svg style="width: 14px; height: 14px; margin-right: 4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+          Tags
+        </span>
+        <div class="task-tags-list">
+          <% @task.tags.each do |tag| %>
+            <span class="task-tag" style="background-color: <%= tag.color %>;">
+              <%= tag.name %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <!-- Description -->
     <div class="task-description-section">
       <span class="task-detail-label">
