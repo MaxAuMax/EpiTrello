@@ -1,0 +1,110 @@
+<div class="container team-dashboard">
+  <div class="team-header">
+    <h1><%= @team.name %></h1>
+    <p>Owner: <%= @team.owner.username %></p>
+    
+    <% if @team.owner_id == current_user.id %>
+      <div class="owner-actions">
+        <%= link_to "Edit Team", edit_team_path(@team), class: "btn btn-primary" %>
+        <%= button_to "Delete Team", team_path(@team), method: :delete, data: { confirm: "Are you sure? This will also remove the team from all projects." }, class: "btn btn-danger" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Members Section -->
+  <div class="team-members-section">
+    <h2>Team Members (<%= @team_members.count %>)</h2>
+    
+    <ul class="members-list">
+      <li class="member-card owner-card">
+        <span class="member-name"><%= @team.owner.username %></span>
+        <span class="member-role badge badge-primary">Owner</span>
+      </li>
+      
+      <% @team_members.each do |team_user| %>
+        <% unless team_user.user_id == @team.owner_id %>
+          <li class="member-card">
+            <span class="member-name"><%= team_user.user.username %></span>
+            <span class="member-email"><%= team_user.user.email %></span>
+            <% if @team.owner_id == current_user.id %>
+              <%= button_to "Remove", team_team_user_path(@team, team_user), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
+            <% end %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+
+    <!-- Pending Invitations -->
+    <% if @team.owner_id == current_user.id && @pending_invitations.any? %>
+      <div class="pending-invitations">
+        <h3>Pending Invitations (<%= @pending_invitations.count %>)</h3>
+        <ul class="members-list">
+          <% @pending_invitations.each do |invitation| %>
+            <li class="member-card pending-card">
+              <span class="member-name"><%= invitation.user.username %></span>
+              <span class="member-status badge badge-warning">Pending</span>
+              <%= button_to "Cancel", team_team_user_path(@team, invitation), method: :delete, class: "btn btn-sm btn-secondary" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Add Member Form (Owner Only) -->
+    <% if @team.owner_id == current_user.id %>
+      <div class="add-member-section">
+        <h3>Invite a Member</h3>
+        <% if @all_users.any? %>
+          <%= form_with(url: team_team_users_path(@team), method: :post, local: true) do |form| %>
+            <div class="form-group">
+              <%= form.label :user_id, "Select a user" %>
+              <%= form.select :user_id, options_from_collection_for_select(@all_users, :id, :username), { prompt: "Choose a user..." }, class: "form-control" %>
+            </div>
+            <%= form.submit "Send Invitation", class: "btn btn-success" %>
+          <% end %>
+        <% else %>
+          <p class="text-muted">All users are already in a team or have been invited.</p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Team Projects Section -->
+  <div class="team-projects-section">
+    <h2>Team Projects (<%= @team_projects.count %>/3)</h2>
+    
+    <ul class="projects-list">
+      <% @team_projects.each do |project| %>
+        <li class="project-card">
+          <h3><%= project.name %></h3>
+          <p><span>Description:</span> <%= project.description %></p>
+          <p><span>Status:</span> <%= project.project_status&.name %></p>
+          <p><span>Members:</span> <%= project.users.count %></p>
+          <div class="project-actions">
+            <%= link_to "View Project", project_path(project), class: "btn" %>
+            <% if @team.owner_id == current_user.id %>
+              <%= button_to "Delete", project_path(project), method: :delete, data: { confirm: "Are you sure you want to delete this project?" }, class: "btn btn-sm btn-danger" %>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+
+      <% if @team.owner_id == current_user.id && @team_projects.count < 3 %>
+        <li class="project-card project-card-add">
+          <%= link_to new_project_path(team_id: @team.id), class: "add-project-link" do %>
+            <div class="add-project-content">
+              <span class="plus-icon">+</span>
+              <p>New Team Project</p>
+            </div>
+          <% end %>
+        </li>
+      <% elsif @team_projects.count >= 3 %>
+        <li class="project-card project-limit-reached">
+          <p>❌ 3 projects limit reached</p>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <%= link_to "← Back to Profile", user_path(current_user), class: "btn btn-secondary" %>
+</div>

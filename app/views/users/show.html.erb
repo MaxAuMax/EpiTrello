@@ -1,28 +1,89 @@
-<%= button_to "Se déconnecter", destroy_user_session_path, method: :delete, class: "logout-button" %>
+<%= button_to "Logout", destroy_user_session_path, method: :delete, class: "logout-button" %>
 
 <div class="user-dashboard">
   <div>
-    <h1>Bienvenue, <%= @user.username %> 👋</h1>
-    <p>Voici vos projets :</p>
+    <h1>Welcome, <%= @user.username %> 👋</h1>
   </div>
 
-  <ul class="projects-list">
-    <% @user.projects.each do |project| %>
-      <li class="project-card">
-        <h2><%= project&.name %></h2>
-        <p><span>Description :</span><%= project&.description %></p>
-        <p><span>Statut :</span> <%= project&.project_status&.name %></p>
-        <%= link_to "Voir le projet", project_path(project) %>
-      </li>
+  <!-- Team Section -->
+  <div class="team-section">
+    <h2>My Team</h2>
+    <% if @user.active_team.present? %>
+      <div class="team-info">
+        <p><strong><%= @user.active_team.name %></strong></p>
+        <p>Members: <%= @user.active_team.team_users.accepted.count %></p>
+        <%= link_to "View Team", team_path(@user.active_team), class: "btn btn-primary" %>
+      </div>
+    <% elsif @user.pending_team_invitations.any? %>
+      <div class="pending-invitations">
+        <p>You have <%= @user.pending_team_invitations.count %> pending invitation(s):</p>
+        <% @user.pending_team_invitations.each do |invitation| %>
+          <div class="invitation-card">
+            <p><%= invitation.team.name %> (from <%= invitation.team.owner.username %>)</p>
+            <%= button_to "Accept", accept_team_team_user_path(invitation.team, invitation), method: :patch, class: "btn btn-success" %>
+            <%= button_to "Reject", reject_team_team_user_path(invitation.team, invitation), method: :patch, class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p>You are not in any team.</p>
+      <%= link_to "Create a Team", new_team_path, class: "btn btn-primary" %>
     <% end %>
+  </div>
 
-    <li class="project-card project-card-add">
-      <%= link_to new_project_path, class: "add-project-link" do %>
-        <div class="add-project-content">
-          <span class="plus-icon">+</span>
-          <p>Nouveau projet</p>
-        </div>
+  <!-- Team Projects Section -->
+  <% if @user.active_team.present? %>
+    <div class="projects-section">
+      <h2>Team Projects</h2>
+      <ul class="projects-list">
+        <% @user.active_team.projects.each do |project| %>
+          <li class="project-card">
+            <h3><%= project&.name %></h3>
+            <p><span>Description:</span> <%= project&.description %></p>
+            <p><span>Status:</span> <%= project&.project_status&.name %></p>
+            <%= link_to "View Project", project_path(project), class: "btn" %>
+          </li>
+        <% end %>
+
+        <% if @user.active_team.owner_id == @user.id && @user.active_team.projects.count < 3 %>
+          <li class="project-card project-card-add">
+            <%= link_to new_project_path(team_id: @user.active_team.id), class: "add-project-link" do %>
+              <div class="add-project-content">
+                <span class="plus-icon">+</span>
+                <p>New Team Project</p>
+              </div>
+            <% end %>
+          </li>
+        <% elsif @user.active_team.projects.count >= 3 %>
+          <li class="project-card project-limit-reached">
+            <p>3 projects limit reached</p>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Personal Projects Section -->
+  <div class="projects-section">
+    <h2>My Personal Projects</h2>
+    <ul class="projects-list">
+      <% @user.owned_projects.personal.each do |project| %>
+        <li class="project-card">
+          <h3><%= project&.name %></h3>
+          <p><span>Description:</span> <%= project&.description %></p>
+          <p><span>Status:</span> <%= project&.project_status&.name %></p>
+          <%= link_to "View Project", project_path(project), class: "btn" %>
+        </li>
       <% end %>
-    </li>
-  </ul>
+
+      <li class="project-card project-card-add">
+        <%= link_to new_project_path, class: "add-project-link" do %>
+          <div class="add-project-content">
+            <span class="plus-icon">+</span>
+            <p>New Personal Project</p>
+          </div>
+        <% end %>
+      </li>
+    </ul>
+  </div>
 </div>
