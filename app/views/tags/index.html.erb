@@ -1,0 +1,242 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">Tags du projet : <%= @project.name %></h1>
+      <p class="page-description">Gérez les tags de ce projet pour organiser vos tâches</p>
+    </div>
+    <div class="page-header-actions">
+      <%= link_to new_project_tag_path(@project), data: { turbo_frame: "modal" }, class: 'btn-primary' do %>
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Nouveau tag
+      <% end %>
+      <%= link_to project_path(@project), class: 'btn-secondary' do %>
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Retour au projet
+      <% end %>
+    </div>
+  </div>
+
+  <div class="tags-container">
+    <% if @tags.any? %>
+      <div class="tags-grid">
+        <% @tags.each do |tag| %>
+          <div class="tag-card">
+            <div class="tag-card-header">
+              <div class="tag-preview" style="background-color: <%= tag.color %>;">
+                <span class="tag-name"><%= tag.name %></span>
+              </div>
+              <div class="tag-actions">
+                <%= link_to edit_project_tag_path(@project, tag), data: { turbo_frame: "modal" }, class: 'tag-action-btn' do %>
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                <% end %>
+                <%= link_to project_tag_path(@project, tag), method: :delete, data: { confirm: 'Êtes-vous sûr de vouloir supprimer ce tag ?' }, class: 'tag-action-btn tag-action-delete' do %>
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+            <div class="tag-card-info">
+              <span class="tag-color-code"><%= tag.color %></span>
+              <% task_count = tag.tasks.count %>
+              <span class="tag-task-count">
+                <%= task_count %> <%= task_count > 1 ? 'tâches' : 'tâche' %>
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <svg style="width: 64px; height: 64px; color: var(--color-slate-300);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        <h3>Aucun tag pour le moment</h3>
+        <p>Créez votre premier tag pour organiser les tâches de ce projet</p>
+        <%= link_to new_project_tag_path(@project), data: { turbo_frame: "modal" }, class: 'btn-primary' do %>
+          Créer un tag
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<turbo-frame id="modal"></turbo-frame>
+
+<style>
+.page-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-slate-200);
+}
+
+.page-header-content h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin-bottom: 0.25rem;
+}
+
+.page-header-content p {
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.tag-card {
+  background: white;
+  border: 1px solid var(--color-slate-200);
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all 0.2s;
+}
+
+.tag-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.tag-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tag-preview {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tag-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.tag-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag-action-btn {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: var(--color-slate-100);
+  color: var(--color-slate-600);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag-action-btn:hover {
+  background: var(--color-slate-200);
+  color: var(--color-slate-800);
+}
+
+.tag-action-delete:hover {
+  background: #fee;
+  color: #dc2626;
+}
+
+.tag-card-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--color-slate-600);
+}
+
+.tag-color-code {
+  font-family: monospace;
+  background: var(--color-slate-100);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.tag-task-count {
+  font-weight: 500;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-slate-900);
+  margin: 1rem 0 0.5rem;
+}
+
+.empty-state p {
+  color: var(--color-slate-600);
+  margin-bottom: 1.5rem;
+}
+
+.btn-primary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-secondary {
+  background: var(--color-slate-100);
+  color: var(--color-slate-700);
+}
+
+.btn-secondary:hover {
+  background: var(--color-slate-200);
+}
+</style>
