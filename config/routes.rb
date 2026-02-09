@@ -18,10 +18,12 @@ Rails.application.routes.draw do
 
   resources :projects do
     resources :tasks do
+      resources :comments, only: [:create, :destroy]
       member do
         get :delete
       end
     end
+    resources :tags, except: [:show]
   end
 
   # Task status update for drag & drop

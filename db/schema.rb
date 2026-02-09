@@ -57,10 +57,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_09_180809) do
   end
 
   create_table "tags_tasks", id: false, charset: "utf8mb4", collation: "utf8mb4_uca1400_ai_ci", force: :cascade do |t|
-    t.bigint "tag_id", null: false
     t.bigint "task_id", null: false
-    t.index ["tag_id", "task_id"], name: "index_tags_tasks_on_tag_id_and_task_id", unique: true
+    t.bigint "tag_id", null: false
     t.index ["tag_id"], name: "index_tags_tasks_on_tag_id"
+    t.index ["task_id", "tag_id"], name: "index_tags_tasks_on_task_id_and_tag_id", unique: true
     t.index ["task_id"], name: "index_tags_tasks_on_task_id"
   end
 

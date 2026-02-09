@@ -48,6 +48,27 @@
         </div>
       </div>
 
+      <!-- Tags Field -->
+      <div class="task-form-field">
+        <%= f.label :tag_ids, 'Tags', class: 'task-detail-label' %>
+        <div class="task-tags-checkboxes">
+          <%= f.collection_check_boxes :tag_ids, @available_tags, :id, :name do |b| %>
+            <div class="tag-checkbox-item">
+              <%= b.check_box class: 'tag-checkbox' %>
+              <%= b.label class: 'tag-label' do %>
+                <span class="tag-color-indicator" style="background-color: <%= b.object.color %>;"></span>
+                <%= b.text %>
+              <% end %>
+            </div>
+          <% end %>
+          <% if @available_tags.empty? %>
+            <p class="no-tags-message">
+              Aucun tag disponible. <%= link_to 'Créer des tags', project_tags_path(@project), target: '_blank' %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
       <!-- Description Field -->
       <div class="task-form-field">
         <%= f.label :description, class: 'task-detail-label' %>
