@@ -52,7 +52,7 @@
   width: 850px;
   max-width: 110vw;
   height: auto;
-  max-height: 100vh;
+  max-height: calc(100vh - 80px);
   margin: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -61,6 +61,24 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+.task-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.task-modal-content::-webkit-scrollbar-track {
+  background: var(--color-slate-100);
+  border-radius: 4px;
+}
+
+.task-modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-slate-300);
+  border-radius: 4px;
+}
+
+.task-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
 }
 
 @keyframes modalSlideIn {
@@ -677,12 +695,38 @@ form .task-meta-grid {
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+  background: var(--color-slate-50);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-slate-200);
 }
 
 .task-comments-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
+}
+
+.task-comments-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.task-comments-list::-webkit-scrollbar-track {
+  background: var(--color-slate-100);
+  border-radius: 4px;
+}
+
+.task-comments-list::-webkit-scrollbar-thumb {
+  background: var(--color-slate-300);
+  border-radius: 4px;
+}
+
+.task-comments-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-400);
 }
 
 .task-comment-item {
