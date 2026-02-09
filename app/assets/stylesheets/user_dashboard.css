@@ -108,6 +108,14 @@
   transform: translateY(-1px);
 }
 
+/* Project card h3 for team projects */
+.project-card h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-slate-900);
+  margin: 0 0 var(--spacing-md) 0;
+}
+
 .project-card-add {
   display: flex;
   align-items: center;

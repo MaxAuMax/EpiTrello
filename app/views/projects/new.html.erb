@@ -2,7 +2,9 @@
     <h1><%= @is_team_project ? "New Team Project" : "New Personal Project" %></h1>
     
     <% if @is_team_project %>
-        <p class="team-info">For team: <strong><%= @team.name %></strong></p>
+        <div class="info-text" style="margin-bottom: var(--spacing-xl);">
+            For team: <strong><%= @team.name %></strong>
+        </div>
     <% end %>
 
     <%= form_for(@project) do |f| %>
