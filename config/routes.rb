@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get "users/show"
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -16,6 +15,16 @@ Rails.application.routes.draw do
   
   get 'users/:id', to: 'users#show', as: 'user'
 
+  # Teams management
+  resources :teams do
+    resources :team_users, only: [:create, :destroy] do
+      member do
+        patch :accept
+        patch :reject
+      end
+    end
+  end
+  
   resources :projects do
     resources :tasks do
       resources :comments, only: [:create, :destroy]
