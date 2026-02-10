@@ -32,7 +32,7 @@
     <div class="projects-section">
       <h2>Team Projects</h2>
       <ul class="projects-list">
-        <% @user.active_team.projects.each do |project| %>
+        <% @user.active_team.projects.order(:name).each do |project| %>
           <li class="project-card">
             <h3><%= project&.name %></h3>
             <p><span>Description:</span> <%= project&.description %></p>
@@ -63,7 +63,7 @@
   <div class="projects-section">
     <h2>My Personal Projects</h2>
     <ul class="projects-list">
-      <% @user.projects.personal.distinct.each do |project| %>
+      <% @user.projects.personal.distinct.order(:name).each do |project| %>
         <li class="project-card">
           <h3><%= project&.name %></h3>
           <p><span>Description:</span> <%= project&.description %></p>

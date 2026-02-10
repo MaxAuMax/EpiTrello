@@ -47,7 +47,7 @@
                 
                 <select class="form-control" data-project-collaborators-target="dropdown" data-action="change->project-collaborators#addCollaborator">
                     <option value="">Choose a collaborator...</option>
-                    <% User.all.where.not(id: current_user.id).each do |user| %>
+                    <% User.all.where.not(id: current_user.id).order(:username).each do |user| %>
                         <option value="<%= user.id %>"><%= user.username %></option>
                     <% end %>
                 </select>

@@ -41,10 +41,10 @@ class TeamsController < ApplicationController
   def show
     @team_members = @team.accepted_members.includes(:user)
     @pending_invitations = @team.pending_invitations.includes(:user)
-    @team_projects = @team.projects.includes(:project_status, :users)
+    @team_projects = @team.projects.includes(:project_status, :users).order(:name)
     # Exclude only accepted and pending users, but allow re-inviting rejected users
     excluded_user_ids = @team.team_users.where(status: ['accepted', 'pending']).pluck(:user_id) + [@team.owner_id]
-    @all_users = User.where.not(id: excluded_user_ids)
+    @all_users = User.where.not(id: excluded_user_ids).order(:username)
   end
 
   def edit
