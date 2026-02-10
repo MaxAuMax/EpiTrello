@@ -1,21 +1,15 @@
 <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "logout-button" %>
 
 <div class="user-dashboard">
-  <div>
+  <div class="dashboard-header">
     <h1>Welcome, <%= @user.username %> 👋</h1>
-  </div>
-
-  <!-- Team Section -->
-  <div class="team-section">
-    <h2>My Team</h2>
     <% if @user.active_team.present? %>
-      <div class="team-info">
-        <p><strong><%= @user.active_team.name %></strong></p>
-        <p>Members: <%= @user.active_team.team_users.accepted.count %></p>
-        <%= link_to "View Team", team_path(@user.active_team), class: "btn btn-primary" %>
-      </div>
+      <p class="team-info-simple">
+        <strong><%= @user.active_team.name %></strong> • <%= @user.active_team.team_users.accepted.count %> members
+        <%= link_to "View Team", team_path(@user.active_team), class: "btn btn-primary", style: "margin-left: var(--spacing-md);" %>
+      </p>
     <% elsif @user.pending_team_invitations.any? %>
-      <div class="pending-invitations">
+      <div class="pending-invitations" style="margin-top: var(--spacing-lg);">
         <p>You have <%= @user.pending_team_invitations.count %> pending invitation(s):</p>
         <% @user.pending_team_invitations.each do |invitation| %>
           <div class="invitation-card">
@@ -26,8 +20,10 @@
         <% end %>
       </div>
     <% else %>
-      <p>You are not in any team.</p>
-      <%= link_to "Create a Team", new_team_path, class: "btn btn-primary" %>
+      <p style="margin-top: var(--spacing-md); color: var(--color-slate-600);">
+        You are not in any team. 
+        <%= link_to "Create a Team", new_team_path, class: "btn btn-primary", style: "margin-left: var(--spacing-sm);" %>
+      </p>
     <% end %>
   </div>
 

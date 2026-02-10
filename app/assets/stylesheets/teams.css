@@ -5,6 +5,28 @@
    Styles for team management views
    ======================================================================== */
 
+/* Dashboard Header */
+.dashboard-header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.dashboard-header h1 {
+  margin-bottom: var(--spacing-md);
+}
+
+.team-info-simple {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-md);
+  color: var(--color-slate-700);
+  font-size: 1rem;
+}
+
+.team-info-simple strong {
+  color: var(--color-slate-900);
+  font-size: 1.125rem;
+}
+
 /* Team Section in User Dashboard */
 .team-section {
   width: 100%;
@@ -329,63 +351,64 @@
   margin-top: 0;
 }
 
-/* Buttons */
-.btn {
-  display: inline-block;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  border: none;
-  text-align: center;
-}
-
-.btn-primary {
-  background: var(--color-blue-600);
-  color: white;
-}
-
-.btn-primary:hover {
-  background: var(--color-blue-700);
-  transform: translateY(-1px);
-}
-
-.btn-secondary {
-  background: var(--color-slate-600);
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: var(--color-slate-700);
-  transform: translateY(-1px);
-}
-
-.btn-success {
+/* Team-specific button overrides for colored action buttons */
+.team-members-section .btn-success,
+.add-member-section .btn-success {
   background: var(--color-green-600);
-  color: white;
 }
 
-.btn-success:hover {
+.team-members-section .btn-success:hover,
+.add-member-section .btn-success:hover {
   background: var(--color-green-700);
-  transform: translateY(-1px);
 }
 
-.btn-danger {
+.team-members-section .btn-danger,
+.project-actions .btn-danger {
   background: var(--color-red-600);
-  color: white;
-}
-
-.btn-danger:hover {
-  background: var(--color-red-700);
-  transform: translateY(-1px);
-}
-
-.btn-sm {
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: 0.75rem;
+}
+
+.team-members-section .btn-danger:hover,
+.project-actions .btn-danger:hover {
+  background: var(--color-red-700);
+}
+
+.team-members-section .btn-secondary {
+  background: var(--color-slate-600);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.75rem;
+}
+
+.team-members-section .btn-secondary:hover {
+  background: var(--color-slate-700);
+}
+
+/* Back button styled like auth pages */
+.team-back-button {
+  position: fixed;
+  top: var(--spacing-xl);
+  left: var(--spacing-xl);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-slate-900);
+  color: white;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2);
+  transition: all var(--transition-base);
+  z-index: 20;
+}
+
+.team-back-button:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3);
+  background: var(--color-slate-800);
 }
 
 /* Forms */
