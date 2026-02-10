@@ -40,20 +40,14 @@
             <%= link_to "View Project", project_path(project), class: "btn" %>
           </li>
         <% end %>
-
+        
         <% if @user.active_team.owner_id == @user.id && @user.active_team.projects.count < 3 %>
-          <li class="project-card project-card-add">
-            <%= link_to new_project_path(team_id: @user.active_team.id), class: "add-project-link" do %>
-              <div class="add-project-content">
-                <span class="plus-icon">+</span>
-                <p>New Team Project</p>
-              </div>
-            <% end %>
-          </li>
-        <% elsif @user.active_team.projects.count >= 3 %>
-          <li class="project-card project-limit-reached">
-            <p>3 projects limit reached</p>
-          </li>
+          <%= link_to new_project_path(team_id: @user.active_team.id), class: "project-card-link" do %>
+            <li class="project-card project-card-empty">
+              <span class="empty-plus">+</span>
+              <span>New team project</span>
+            </li>
+          <% end %>
         <% end %>
       </ul>
     </div>
@@ -76,15 +70,13 @@
           <%= link_to "View Project", project_path(project), class: "btn" %>
         </li>
       <% end %>
-
-      <li class="project-card project-card-add">
-        <%= link_to new_project_path, class: "add-project-link" do %>
-          <div class="add-project-content">
-            <span class="plus-icon">+</span>
-            <p>New Personal Project</p>
-          </div>
-        <% end %>
-      </li>
+      
+      <%= link_to new_project_path, class: "project-card-link" do %>
+        <li class="project-card project-card-empty">
+          <span class="empty-plus">+</span>
+          <span>New personal project</span>
+        </li>
+      <% end %>
     </ul>
   </div>
 </div>

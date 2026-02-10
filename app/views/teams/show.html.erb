@@ -96,20 +96,14 @@
           </div>
         </li>
       <% end %>
-
+      
       <% if @team.owner_id == current_user.id && @team_projects.count < 3 %>
-        <li class="project-card project-card-add">
-          <%= link_to new_project_path(team_id: @team.id), class: "add-project-link" do %>
-            <div class="add-project-content">
-              <span class="plus-icon">+</span>
-              <p>New Team Project</p>
-            </div>
-          <% end %>
-        </li>
-      <% elsif @team_projects.count >= 3 %>
-        <li class="project-card project-limit-reached">
-          <p>❌ 3 projects limit reached</p>
-        </li>
+        <%= link_to new_project_path(team_id: @team.id), class: "project-card-link" do %>
+          <li class="project-card project-card-empty">
+            <span class="empty-plus">+</span>
+            <span>New team project</span>
+          </li>
+        <% end %>
       <% end %>
     </ul>
   </div>
