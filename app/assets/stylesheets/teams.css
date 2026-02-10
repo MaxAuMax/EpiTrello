@@ -528,3 +528,50 @@
     width: 100%;
   }
 }
+
+/* Project Collaborators List */
+.collaborators-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.collaborator-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background: var(--color-slate-50);
+  border: 1px solid var(--color-slate-200);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.collaborator-item:hover {
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.collaborator-name {
+  font-weight: 600;
+  color: var(--color-slate-900);
+  flex: 1;
+}
+
+.btn-remove-collaborator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xs);
+  background: transparent;
+  border: none;
+  color: var(--color-red-600);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.btn-remove-collaborator:hover {
+  background: var(--color-red-50);
+  color: var(--color-red-700);
+}

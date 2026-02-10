@@ -1,0 +1,64 @@
+<div class="container">
+    <h1>Edit Project</h1>
+    
+    <% if @is_team_project %>
+        <div class="info-text" style="margin-bottom: var(--spacing-xl);">
+            Team project: <strong><%= @team.name %></strong>
+        </div>
+    <% end %>
+
+    <%= form_for(@project) do |f| %>
+        <% if @project.errors.any? %>
+            <div class="error-messages">
+                <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+                <ul>
+                    <% @project.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
+
+        <div class="form-group">
+            <%= f.label :name %>
+            <%= f.text_field :name, class: 'form-control' %>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :description %>
+            <%= f.text_area :description, class: 'form-control', rows: 4 %>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :project_status, "Status" %>
+            <%= f.select :project_status_id, options_for_select(@status_options, @project.project_status_id), {}, { class: 'form-control' } %>
+        </div>
+
+        <% if @is_team_project %>
+            <div class="info-text">
+                <strong>Team members:</strong> All members of <%= @team.name %> have access to this project automatically.
+            </div>
+        <% else %>
+            <div class="form-group" data-controller="project-collaborators" data-project-collaborators-existing="<%= (@project.users.pluck(:id) - [current_user.id]).to_json %>">
+                <%= f.label :users, "Collaborators" %>
+                <div class="info-text" style="margin-bottom: var(--spacing-sm);">
+                    You are always included. Select additional collaborators below:
+                </div>
+                
+                <select class="form-control" data-project-collaborators-target="dropdown" data-action="change->project-collaborators#addCollaborator">
+                    <option value="">Choose a collaborator...</option>
+                    <% User.all.where.not(id: current_user.id).each do |user| %>
+                        <option value="<%= user.id %>"><%= user.username %></option>
+                    <% end %>
+                </select>
+                
+                <div class="collaborators-list" data-project-collaborators-target="list" style="margin-top: var(--spacing-md);"></div>
+            </div>
+        <% end %>
+
+        <div class="form-actions">
+            <%= f.submit "Update Project", class: 'btn btn-primary' %>
+            <%= link_to "Cancel", project_path(@project), class: "btn btn-secondary" %>
+        </div>
+    <% end %>
+</div>

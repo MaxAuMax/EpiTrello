@@ -90,12 +90,41 @@ class ProjectsController < ApplicationController
 
     def edit
         @project = Project.find(params[:id])
+        @status_options = status_options
+        @is_team_project = @project.team_id.present?
+        @team = @project.team
     end
 
     def update
         @project = Project.find(params[:id])
-        @project.update(project_params)
-        redirect_to project_path(@project)
+        
+        # Update basic attributes
+        if @project.update(project_params.except(:user_ids))
+            # Only update users for personal projects
+            if @project.team_id.nil?
+                # Remove all users except owner
+                @project.users.clear
+                @project.users << current_user
+                
+                # Add selected collaborators
+                @users = params[:project][:user_ids]
+                @users&.delete_if { |user_id| user_id.empty? }
+                
+                if @users
+                    @users.each do |user_id|
+                        user = User.find(user_id)
+                        @project.users << user unless @project.users.include?(user)
+                    end
+                end
+            end
+            
+            redirect_to project_path(@project)
+        else
+            @status_options = status_options
+            @is_team_project = @project.team_id.present?
+            @team = @project.team
+            render 'edit'
+        end
     end
 
     def destroy

@@ -63,11 +63,16 @@
   <div class="projects-section">
     <h2>My Personal Projects</h2>
     <ul class="projects-list">
-      <% @user.owned_projects.personal.each do |project| %>
+      <% @user.projects.personal.distinct.each do |project| %>
         <li class="project-card">
           <h3><%= project&.name %></h3>
           <p><span>Description:</span> <%= project&.description %></p>
           <p><span>Status:</span> <%= project&.project_status&.name %></p>
+          <% if project.owner_id != @user.id %>
+            <p style="font-size: 0.875rem; color: var(--color-slate-600); margin-top: var(--spacing-xs);">
+              <em>Owned by <%= project.owner.username %></em>
+            </p>
+          <% end %>
           <%= link_to "View Project", project_path(project), class: "btn" %>
         </li>
       <% end %>
