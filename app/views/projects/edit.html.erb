@@ -1,6 +1,6 @@
 <div class="container">
     <h1>Edit Project</h1>
-    
+
     <% if @is_team_project %>
         <div class="info-text" style="margin-bottom: var(--spacing-xl);">
             Team project: <strong><%= @team.name %></strong>
@@ -44,23 +44,23 @@
                 <div class="info-text" style="margin-bottom: var(--spacing-sm);">
                     You are always included. Select additional collaborators below:
                 </div>
-                
+
                 <select class="form-control" data-project-collaborators-target="dropdown" data-action="change->project-collaborators#addCollaborator">
                     <option value="">Choose a collaborator...</option>
                     <% User.all.where.not(id: current_user.id).order(:username).each do |user| %>
                         <option value="<%= user.id %>"><%= user.username %></option>
                     <% end %>
                 </select>
-                
+
                 <div class="collaborators-list" data-project-collaborators-target="list" style="margin-top: var(--spacing-md);"></div>
             </div>
         <% end %>
 
         <div class="form-actions">
             <%= f.submit "Update Project", class: 'btn btn-primary' %>
-            <%= link_to "Cancel", project_path(@project), class: "btn btn-secondary" %>
+            <%= link_to "Cancel", :back, class: "btn btn-secondary" %>
         </div>
     <% end %>
-    
+
     <%= button_to "Delete Project", project_path(@project), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this project? This action cannot be undone." } }, style: "margin-top: var(--spacing-md); background: var(--color-red-600); color: white; padding: var(--spacing-md) var(--spacing-lg); border-radius: var(--radius-md); border: none; font-weight: 600; cursor: pointer;" %>
 </div>
