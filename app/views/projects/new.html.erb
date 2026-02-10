@@ -1,39 +1,66 @@
-<%= form_for(@project) do |f| %>
-    <% if @project.errors.any? %>
-        <div id="error_explanation">
-        <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
-
-        <ul>
-        <% @project.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-        <% end %>
-        </ul>
+<div class="container">
+    <h1><%= @is_team_project ? "New Team Project" : "New Personal Project" %></h1>
+    
+    <% if @is_team_project %>
+        <div class="info-text" style="margin-bottom: var(--spacing-xl);">
+            For team: <strong><%= @team.name %></strong>
         </div>
     <% end %>
 
-    <div class="field">
-        <%= f.label :name %>
-        <%= f.text_field :name, id: :project_name %>
-    </div>
+    <%= form_for(@project) do |f| %>
+        <% if @project.errors.any? %>
+            <div class="error-messages">
+                <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+                <ul>
+                    <% @project.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
 
-    <div class="field">
-        <%= f.label :description %>
-        <%= f.text_area :description, id: :project_description %>
-    </div>
+        <%= f.hidden_field :team_id, value: params[:team_id] %>
 
-    <div class="field">
-        <%= f.label :project_status %>
-        <%= f.select :project_status_id, options_for_select(@status_options), {}, { class: 'custom-select', id: 'project_status' } %>
-    </div>
-
-    <div class="field">
-        <%= f.label :users %>
-        <div class="users-chekbox">
-            <%= f.collection_check_boxes :user_ids, User.all.where.not(id: current_user.id), :id, :username %>
+        <div class="form-group">
+            <%= f.label :name %>
+            <%= f.text_field :name, class: 'form-control' %>
         </div>
-    </div>
 
-    <div class="field">
-        <%= f.submit class: 'btn-add' %>
-    </div>
-<% end %>
+        <div class="form-group">
+            <%= f.label :description %>
+            <%= f.text_area :description, class: 'form-control', rows: 4 %>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :project_status, "Status" %>
+            <%= f.select :project_status_id, options_for_select(@status_options), {}, { class: 'form-control' } %>
+        </div>
+
+        <% if @is_team_project %>
+            <div class="info-text">
+                All team members will have access to this project automatically.
+            </div>
+        <% else %>
+            <div class="form-group" data-controller="project-collaborators" data-project-collaborators-existing="[]">
+                <%= f.label :users, "Collaborators" %>
+                <div class="info-text" style="margin-bottom: var(--spacing-sm);">
+                    You are always included. Select additional collaborators below:
+                </div>
+                
+                <select class="form-control" data-project-collaborators-target="dropdown" data-action="change->project-collaborators#addCollaborator">
+                    <option value="">Choose a collaborator...</option>
+                    <% User.all.where.not(id: current_user.id).order(:username).each do |user| %>
+                        <option value="<%= user.id %>"><%= user.username %></option>
+                    <% end %>
+                </select>
+                
+                <div class="collaborators-list" data-project-collaborators-target="list" style="margin-top: var(--spacing-md);"></div>
+            </div>
+        <% end %>
+
+        <div class="form-actions">
+            <%= f.submit "Create Project", class: 'btn btn-primary' %>
+            <%= link_to "Cancel", @is_team_project ? team_path(@team) : user_path(current_user), class: "btn btn-secondary" %>
+        </div>
+    <% end %>
+</div>

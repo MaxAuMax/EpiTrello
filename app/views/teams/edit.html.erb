@@ -1,0 +1,26 @@
+<div class="container">
+  <h1>Edit Team</h1>
+
+  <%= form_with(model: @team, local: true) do |form| %>
+    <% if @team.errors.any? %>
+      <div class="error-messages">
+        <h2><%= pluralize(@team.errors.count, "error") %> prevented this team from being updated:</h2>
+        <ul>
+          <% @team.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :name, "Team Name" %>
+      <%= form.text_field :name, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Update Team", class: "btn btn-primary" %>
+      <%= link_to "Cancel", @team, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
