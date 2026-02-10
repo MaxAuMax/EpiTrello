@@ -17,6 +17,7 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.username = auth.info.email.split('@').first # Génère un nom d'utilisateur depuis l'email
     end
+  end
   
   # Get the user's active team (either owned or accepted membership)
   def active_team
