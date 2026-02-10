@@ -1,0 +1,2 @@
+# Empty fixture for tags_tasks join table
+# This prevents Rails from auto-generating fixture data

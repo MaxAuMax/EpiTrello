@@ -1,28 +1,90 @@
-<%= button_to "Se déconnecter", destroy_user_session_path, method: :delete, class: "logout-button" %>
+<%= button_to "Logout", destroy_user_session_path, method: :delete, class: "logout-button" %>
 
 <div class="user-dashboard">
-  <div>
-    <h1>Bienvenue, <%= @user.username %> 👋</h1>
-    <p>Voici vos projets :</p>
+  <div class="dashboard-header">
+    <h1>Welcome, <%= @user.username %> 👋</h1>
+    <% if @user.active_team.present? %>
+      <p class="team-info-simple">
+        <strong><%= @user.active_team.name %></strong> • <%= @user.active_team.team_users.accepted.count %> members
+        <%= link_to "View Team", team_path(@user.active_team), class: "btn btn-primary", style: "margin-left: var(--spacing-md);" %>
+      </p>
+    <% elsif @user.pending_team_invitations.any? %>
+      <div class="pending-invitations" style="margin-top: var(--spacing-lg);">
+        <p>You have <%= @user.pending_team_invitations.count %> pending invitation(s):</p>
+        <% @user.pending_team_invitations.each do |invitation| %>
+          <div class="invitation-card">
+            <p><%= invitation.team.name %> (from <%= invitation.team.owner.username %>)</p>
+            <%= button_to "Accept", accept_team_team_user_path(invitation.team, invitation), method: :patch, class: "btn btn-success" %>
+            <%= button_to "Reject", reject_team_team_user_path(invitation.team, invitation), method: :patch, class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="margin-top: var(--spacing-md); color: var(--color-slate-600);">
+        You are not in any team. 
+        <%= link_to "Create a Team", new_team_path, class: "btn btn-primary", style: "margin-left: var(--spacing-sm);" %>
+      </p>
+    <% end %>
   </div>
 
-  <ul class="projects-list">
-    <% @user.projects.each do |project| %>
-      <li class="project-card">
-        <h2><%= project&.name %></h2>
-        <p><span>Description :</span><%= project&.description %></p>
-        <p><span>Statut :</span> <%= project&.project_status&.name %></p>
-        <%= link_to "Voir le projet", project_path(project) %>
-      </li>
-    <% end %>
+  <!-- Team Projects Section -->
+  <% if @user.active_team.present? %>
+    <div class="projects-section">
+      <h2>Team Projects</h2>
+      <ul class="projects-list">
+        <% @user.active_team.projects.order(:name).each do |project| %>
+          <li class="project-card">
+            <h3><%= project&.name %></h3>
+            <p><span>Description:</span> <%= project.description.present? ? project.description : "<em>No description provided</em>".html_safe %></p>
+            <p><span>Status:</span> <%= project&.project_status&.name %></p>
+            <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-md);">
+              <%= link_to "View Project", project_path(project), class: "btn" %>
+              <%= link_to "Edit", edit_project_path(project), class: "btn btn-secondary" %>
+            </div>
+          </li>
+        <% end %>
+        
+        <% if @user.active_team.owner_id == @user.id && @user.active_team.projects.count < 3 %>
+          <%= link_to new_project_path(team_id: @user.active_team.id), class: "project-card-link" do %>
+            <li class="project-card project-card-empty">
+              <span class="empty-plus">+</span>
+              <span>New team project</span>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-    <li class="project-card project-card-add">
-      <%= link_to new_project_path, class: "add-project-link" do %>
-        <div class="add-project-content">
-          <span class="plus-icon">+</span>
-          <p>Nouveau projet</p>
-        </div>
+  <!-- Personal Projects Section -->
+  <div class="projects-section">
+    <h2>My Personal Projects</h2>
+    <ul class="projects-list">
+      <% @user.projects.personal.distinct.order(:name).each do |project| %>
+        <li class="project-card">
+          <h3><%= project&.name %></h3>
+          <p><span>Description:</span> <%= project.description.present? ? project.description : "<em>No description provided</em>".html_safe %></p>
+          <p><span>Status:</span> <%= project&.project_status&.name %></p>
+          <% if project.owner_id != @user.id %>
+            <p style="font-size: 0.875rem; color: var(--color-slate-600); margin-top: var(--spacing-xs);">
+              <em>Owned by <%= project.owner.username %></em>
+            </p>
+          <% end %>
+          <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-md);">
+            <%= link_to "View Project", project_path(project), class: "btn" %>
+            <% if project.owner_id == @user.id %>
+              <%= link_to "Edit", edit_project_path(project), class: "btn btn-secondary" %>
+            <% end %>
+          </div>
+        </li>
       <% end %>
-    </li>
-  </ul>
+      
+      <%= link_to new_project_path, class: "project-card-link" do %>
+        <li class="project-card project-card-empty">
+          <span class="empty-plus">+</span>
+          <span>New personal project</span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 </div>
